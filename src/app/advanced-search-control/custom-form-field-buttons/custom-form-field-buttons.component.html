@@ -1,0 +1,24 @@
+
+<ng-container [formGroup]="form">
+  <div class="scope-buttons">
+  <mat-button-toggle-group name="fontStyle" formControlName="scope" >
+    <mat-button-toggle *ngFor="let option of getDomainOptions()" [value]='option.id'>{{option.shortLabel }}</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+  <mat-divider [vertical]="true" class="divider"></mat-divider>
+  <span *ngIf="value.scope === 'endswith' || value.scope === 'contains'" style="padding-right: 3px; color:darkblue">%</span>
+  <input
+    formControlName="query"
+    matInput
+    [ngStyle]="{opacity: disabled ? 0.5 : 1 }"
+    [placeholder]="placeholder"
+    [type]="type"
+    name="advanced-search"
+    class="input" >
+    <span *ngIf="value.scope === 'startswith' || value.scope === 'contains'" style="padding-left: 3px; color:darkblue">%</span>
+  </ng-container>
+
+
+
+
+

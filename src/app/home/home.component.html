@@ -1,0 +1,37 @@
+<p>home works!</p>
+<pre>
+  {{globalStateService.snapshot.username}}
+</pre>
+<p>Pooling count times: {{poolingService.pooling$ | async}}</p>
+<table border="1">
+  <tbody>
+  <tr>
+    <td>
+      <a routerLink='/lazy'>/lazy</a>
+    </td>
+    <td>
+      Load lazy module
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<br>
+<ng-container [formGroup]="form">
+  <app-search-form-field-container formControlName="first" type="text"></app-search-form-field-container>
+  <app-search-form-field-container formControlName="second" type="number"></app-search-form-field-container>
+  <app-search-form-field-buttons-container formControlName="third" type="text"></app-search-form-field-buttons-container>
+  <app-search-form-field-buttons-container formControlName="fourth" type="number"></app-search-form-field-buttons-container>
+  <mat-form-field appearance="outline">
+    <mat-label>Outline form field</mat-label>
+    <input matInput placeholder="Placeholder" >
+    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-hint>Hint</mat-hint>
+  </mat-form-field>
+</ng-container>
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+<p>lazy-child works!</p>
+
+<pre>
+  {{globalStateService.snapshot?.username}}
+</pre>
+
+<p> Local Module State </p>
+<pre>{{localModuleStateService.snapshot | json}}
+</pre>
+
+<p> Component State </p>
+<pre>{{componentStateService.snapshot | json}}
+</pre>
+
+<a [routerLink]="['/', 'lazy']">Go back</a>

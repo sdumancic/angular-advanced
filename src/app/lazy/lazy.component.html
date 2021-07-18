@@ -1,0 +1,20 @@
+<p>Pooling count times: {{poolingService.pooling$ | async}}</p>
+<p> Global State </p>
+<pre>
+  {{globalStateService.snapshot?.username}}
+</pre>
+
+<p> Local Module State </p>
+<pre>{{localModuleStateService.snapshot | json}}
+</pre>
+
+<p> Component State </p>
+<pre>{{componentStateService.snapshot | json}}
+</pre>
+
+<div>
+<a [routerLink]="['/', 'lazy', 'child']">Go to child</a>
+</div>
+<div>
+<a [routerLink]="['/']">Go back</a>
+</div>

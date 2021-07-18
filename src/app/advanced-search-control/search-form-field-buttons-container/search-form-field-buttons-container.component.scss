@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.search-form-field {
+  width: 25rem;
+}
+
+.disabled-control {
+	opacity: 0.5;
+	pointer-events: none;
+}

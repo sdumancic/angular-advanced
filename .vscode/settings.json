@@ -1,0 +1,8 @@
+{
+  "prettier.typescriptEnable": [
+  "typescript",
+    "typescript",
+    "typescriptreact"
+  ],
+  "angular.enable-strict-mode-prompt": false
+}

@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.scope-buttons {
+ // width:300px;
+  max-width: 400px;
+  margin-left: 0.7rem;
+}
+
+.divider {
+  height: 1em;
+  color: currentColor;
+  margin: 0 0.75rem;
+}
+
+.percentage-button {
+  height: 30px;
+}
+
+.mat-button-toggle-group {
+  height: 16px;
+  align-items: center;
+}
+
+.mat-button-toggle-label-content {
+  line-height: 16px !important;
+}
