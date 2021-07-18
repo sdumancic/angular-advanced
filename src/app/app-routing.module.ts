@@ -12,6 +12,13 @@ const routes: Routes = [
     path: 'lazy',
     loadChildren: () => import('./lazy/lazy.module').then((m) => m.LazyModule),
   },
+  {
+    path: 'shared-forms',
+    loadChildren: () =>
+      import('./shared-forms/shared-forms.module').then(
+        (m) => m.SharedFormsModule
+      ),
+  },
 ];
 
 @NgModule({
