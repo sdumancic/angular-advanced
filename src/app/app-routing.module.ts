@@ -19,6 +19,13 @@ const routes: Routes = [
         (m) => m.SharedFormsModule
       ),
   },
+  {
+    path: 'async-validators',
+    loadChildren: () =>
+      import('./async-validators/async-validators.module').then(
+        (m) => m.AsyncValidatorsModule
+      ),
+  },
 ];
 
 @NgModule({

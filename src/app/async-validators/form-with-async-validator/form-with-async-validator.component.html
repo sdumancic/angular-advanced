@@ -1,0 +1,21 @@
+<div [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <input matInput formControlName="name" placeholder="Enter name" required/>
+    <mat-error>
+      <span *ngIf="!form.get('name').valid && form.touched && form.get('name').errors?.required">Name is required</span>
+      <span *ngIf="!form.get('name').valid && form.touched && form.get('name').errors?.minlength">Minimum length is {{form.get('name').errors.minlength.requiredLength}}</span>
+      <span *ngIf="!form.get('name').valid && form.touched && form.get('name').errors?.forbiddenName">Name cannot be Bob</span>
+   </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" >
+    <input matInput formControlName="age" placeholder="Enter age" customAsyncValidator/>
+    <mat-error>
+      <span *ngIf="!form.get('age').valid && form.touched && form.get('age').errors?.required ">Age is mandatory</span>
+      <span *ngIf="!form.get('age').valid && form.touched && form.get('age').errors?.ageNotAllowed ">Age must be higher then 18</span>
+   </mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+
+</div>
