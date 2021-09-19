@@ -6,8 +6,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { combineLatest, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { combineLatest, from, of } from 'rxjs';
+import { concatMap, delay, map, mergeMap, tap } from 'rxjs/operators';
 import { ageAsyncValidator } from './age-async-validator';
 import { forbiddenNameValidator } from './forbidden-name.directive';
 
@@ -47,6 +47,27 @@ export class FormWithAsyncValidatorComponent implements OnInit {
     this.checkIfFormPassesValidation(this.form).then((valid) =>
       console.log('Form is valid? ', valid)
     );
+
+    this.combineLatestTest();
+  }
+
+  combineLatestTest() {
+    console.log('combinelatest test');
+    const first$ = from([1, 2, 3]).pipe(
+      map((item) => of(item)),
+      concatMap((item$) => item$)
+    );
+    const second$ = from([4, 5, 6]).pipe(
+      map((item) => of(item)),
+      concatMap((item$) => item$)
+    );
+    combineLatest([first$, second$])
+      .pipe(
+        tap(([a, b]) => {
+          console.log(a, b);
+        })
+      )
+      .subscribe();
   }
 
   checkIfFormPassesValidation(formGroup: FormGroup) {

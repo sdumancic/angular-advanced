@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">My todos</mat-toolbar>
+<div class='container'>
+<h2>Add Todo</h2>
+<mat-card>
+  <form [formGroup]="form" (ngSubmit)='form.valid && addTodo()'>
+    <mat-form-field appearance='outline'>
+      <input formControlName='title' matInput placeholder="Title">
+    </mat-form-field>
+    <mat-form-field appearance='outline'>
+      <input formControlName='description' matInput placeholder="Description">
+    </mat-form-field>
+    <button mat-raised-button color='primary'>Add todo</button>
+  </form>
+</mat-card>
+</div>

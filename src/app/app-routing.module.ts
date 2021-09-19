@@ -26,6 +26,11 @@ const routes: Routes = [
         (m) => m.AsyncValidatorsModule
       ),
   },
+  {
+    path: 'akita-home',
+    loadChildren: () =>
+      import('./akita/akita.module').then((m) => m.AkitaModule),
+  },
 ];
 
 @NgModule({
