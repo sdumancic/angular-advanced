@@ -14,10 +14,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { environment } from 'src/environments/environment';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
   imports: [
+    environment.production ? [] : AkitaNgDevtools.forRoot(),
     CommonModule,
     BrowserModule,
     AppRoutingModule,
@@ -29,6 +35,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatInputModule,
     MatIconModule,
     HttpClientModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   bootstrap: [AppComponent],
   exports: [HomeComponent],

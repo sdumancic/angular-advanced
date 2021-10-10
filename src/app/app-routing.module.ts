@@ -31,6 +31,18 @@ const routes: Routes = [
     loadChildren: () =>
       import('./akita/akita.module').then((m) => m.AkitaModule),
   },
+  {
+    path: 'material-home',
+    loadChildren: () =>
+      import('./material/material.module').then((m) => m.MaterialModule),
+  },
+  {
+    path: 'change-detection-home',
+    loadChildren: () =>
+      import('./change-detection/change-detection.module').then(
+        (m) => m.ChangeDetectionModule
+      ),
+  },
 ];
 
 @NgModule({
