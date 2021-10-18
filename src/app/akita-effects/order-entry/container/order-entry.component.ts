@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { combineLatest, Subject, zip } from 'rxjs';
+import { takeUntil, switchMap, mergeMap, tap, concatMap, take } from 'rxjs/operators';
+import { IOrderItem } from '../../data-access/order-items.model';
+import { IOrder } from '../../data-access/order.model';
 import { OrderEntryFacadeService } from '../facade/order-entry-facade.service';
 
 @Component({
@@ -12,6 +14,8 @@ import { OrderEntryFacadeService } from '../facade/order-entry-facade.service';
 export class OrderEntryComponent implements OnInit {
 
   public orderId : number = null;
+  public order: IOrder = null;
+  public orderItems: IOrderItem[] = null;
   private unsubscribe$ = new Subject();
   private lastEmittedOrderId: number = null;
 
@@ -36,8 +40,18 @@ export class OrderEntryComponent implements OnInit {
     let orderIdNumber: number;
     orderIdNumber = Number(orderId);
     if (!Number.isNaN(orderIdNumber) && this.lastEmittedOrderId !== orderIdNumber) {
-       this.orderId = orderIdNumber;
-      this.lastEmittedOrderId = orderIdNumber;
+      zip(this.facade.getOrderDetails$(orderIdNumber), this.facade.getOrderItems$(orderIdNumber)).pipe(
+        take(1),
+        tap(([order, orderItems]) => {
+          this.order = order;
+          this.orderItems = orderItems;
+         })
+      ).subscribe(() => {
+        this.orderId = orderIdNumber;
+        this.lastEmittedOrderId = orderIdNumber;
+      }
+      );
+
     }
   }
 

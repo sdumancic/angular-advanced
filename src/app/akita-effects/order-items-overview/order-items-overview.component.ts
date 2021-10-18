@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { IOrderItem } from '../data-access/order-items.model';
 
 @Component({
   selector: 'app-order-items-overview',
@@ -7,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class OrderItemsOverviewComponent implements OnInit {
 
-  @Input() orderId: number = null;
+  @Input() orderItems: IOrderItem[] = [];
   constructor() { }
 
   ngOnInit(): void {

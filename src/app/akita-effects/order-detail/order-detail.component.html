@@ -1,1 +1,129 @@
-<p>order-detail works! {{orderId}}</p>
+<div class="container" [formGroup]="form">
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Id</mat-label>
+      <input matInput placeholder="Id" formControlName="id" />
+      <mat-icon matSuffix>id</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Order Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="orderDate"/>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker ></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Delivery Date</mat-label>
+      <input matInput [matDatepicker]="picker2" formControlName="deliveryDate"/>
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2 ></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Id</mat-label>
+      <input matInput placeholder="Id" formControlName="salesPersonId" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Sales person name</mat-label>
+      <input
+        matInput
+        placeholder="Sales person name"
+        formControlName="salesPersonName"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Sales person lastname</mat-label>
+      <input
+        matInput
+        placeholder="Sales person lastname"
+        formControlName="salesPersonLastname"
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Status code </mat-label>
+      <input matInput placeholder="Code" formControlName="statusCode" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Status description</mat-label>
+      <input
+        matInput
+        placeholder="Status description"
+        formControlName="statusDescription"
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Customer id</mat-label>
+      <input matInput placeholder="Customer id" formControlName="customerId" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Customer name</mat-label>
+      <input
+        matInput
+        placeholder="Customer name"
+        formControlName="customerName"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Customer surname</mat-label>
+      <input
+        matInput
+        placeholder="Customer surname"
+        formControlName="customerSurname"
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Vat id</mat-label>
+      <input matInput placeholder="VAR id" formControlName="vatId" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>VAT name</mat-label>
+      <input matInput placeholder="VAT name" formControlName="vatName" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>VAT %</mat-label>
+      <input matInput placeholder="VAT %" formControlName="vatPercentage" />
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Currency</mat-label>
+      <input matInput placeholder="Currency" formControlName="orderCurrency" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Order amount</mat-label>
+      <input
+        matInput
+        placeholder="Order amount"
+        formControlName="orderAmount"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>VAT amount</mat-label>
+      <input matInput placeholder="VAR amount" formControlName="vatAmount" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Total Amount</mat-label>
+      <input
+        matInput
+        placeholder="Total Amount"
+        formControlName="totalOrderAmount"
+      />
+    </mat-form-field>
+  </div>
+</div>
