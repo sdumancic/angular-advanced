@@ -1,19 +1,62 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  ApplicationInitStatus,
+  ApplicationRef,
+  ChangeDetectionStrategy,
+  Component,
+  DoCheck,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-first',
   templateUrl: './first.component.html',
   styleUrls: ['./first.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FirstComponent implements OnInit {
-  a: number;
-  get title() {
-    console.log('A ', new Date());
-    return 'A';
+export class FirstComponent implements OnInit, DoCheck {
+  obsValue: number;
+
+  form: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private appRef: ApplicationRef
+  ) {}
+
+  ngDoCheck(): void {
+    console.log('docheck');
   }
 
-  constructor() {}
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      firstname: new FormControl('', [Validators.required]),
+      lastname: new FormControl('', [Validators.required]),
+    });
+    this.form.patchValue({
+      firstname: 'John',
+      lastname: 'doe',
+    });
+  }
 
-  ngOnInit(): void {}
+  fetchObs() {
+    this.http
+      .get<{ firstname: string; lastname: string }>(`../assets/test-data.json`)
+      .subscribe((res) => {
+        this.form.patchValue({
+          firstname: res.firstname,
+          lastname: res.lastname,
+        });
+        //this.appRef.tick();
+      });
+  }
 }

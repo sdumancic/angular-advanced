@@ -1,3 +1,9 @@
-{{title}}
 
-<button (click)="a=1">Click</button>
+
+
+<button (click)="fetchObs()">Fetch from Observable</button>
+
+<form [formGroup]='form'>
+  <input type="text" formControlName="firstname">
+  <input type="text" formControlName="lastname">
+</form>

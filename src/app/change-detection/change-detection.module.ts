@@ -5,9 +5,15 @@ import { ChangeDetectionHomeComponent } from './change-detection-home/change-det
 import { ChangeDetectionRoutingModule } from './change-detection-routing.module';
 import { FirstComponent } from './change-detection-home/first/first.component';
 import { SecondComponent } from './change-detection-home/second/second.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, ChangeDetectionRoutingModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ChangeDetectionRoutingModule,
+    HttpClientModule,
+  ],
   declarations: [ChangeDetectionHomeComponent, FirstComponent, SecondComponent],
 })
 export class ChangeDetectionModule {}
