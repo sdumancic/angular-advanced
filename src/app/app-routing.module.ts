@@ -32,9 +32,9 @@ const routes: Routes = [
       import('./akita/akita.module').then((m) => m.AkitaModule),
   },
   {
-    path: 'material-home',
+    path: 'akita-effects',
     loadChildren: () =>
-      import('./material/material.module').then((m) => m.MaterialModule),
+      import('./akita-effects/akita-effects.module').then((m) => m.AkitaEffectsModule),
   },
   {
     path: 'change-detection-home',
