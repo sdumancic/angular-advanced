@@ -1,18 +1,23 @@
 import { FormControl } from '@angular/forms';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.scss']
+  styleUrls: ['./toolbar.component.scss'],
 })
-export class ToolbarComponent implements OnInit, OnDestroy{
-
-
+export class ToolbarComponent implements OnInit, OnDestroy {
   private _orderId: number;
-  private unsubscribe$ = new  Subject();
+  private unsubscribe$ = new Subject();
 
   @Input()
   set orderId(value: number) {
@@ -20,22 +25,18 @@ export class ToolbarComponent implements OnInit, OnDestroy{
     if (this.control) {
       this.control.patchValue(value, { emitEvent: false });
     }
-
   }
   @Output() orderNumberUpdated = new EventEmitter<string>();
 
   control: FormControl = new FormControl(null);
 
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-
+  clearSearch() {
+    this.control.setValue(null);
   }
 
-  clearSearch(){
-     this.control.setValue(null);
-  }
-
-  emitOrderUpdate(){
+  emitOrderUpdate() {
     this.orderNumberUpdated.emit(this.control.value);
   }
 
@@ -43,5 +44,4 @@ export class ToolbarComponent implements OnInit, OnDestroy{
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
 }

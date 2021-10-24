@@ -1,4 +1,4 @@
-import { IOrder } from "../order.model";
+import { IOrder } from '../order.model';
 
 export const data: IOrder[] = [
   {
@@ -8,26 +8,26 @@ export const data: IOrder[] = [
     salesPerson: {
       id: 'ERZ122',
       name: 'John',
-      surname: 'Doe'
+      surname: 'Doe',
     },
     status: {
       code: '12',
-      description: 'Delivered'
+      description: 'Delivered',
     },
     customer: {
       id: 'SD01',
       name: 'Sanjin',
-      surname: 'Dumancic'
+      surname: 'Dumancic',
     },
-    vat : {
+    vat: {
       id: 1,
       name: 'regular vat',
-      percentage: 18
+      percentage: 18,
     },
     orderCurrency: 'CHF',
     orderAmount: 1245.65,
     vatAmount: 122.23,
-    totalOrderAmount: 1400.00
+    totalOrderAmount: 1400.0,
   },
   {
     id: 2,
@@ -36,26 +36,26 @@ export const data: IOrder[] = [
     salesPerson: {
       id: 'GSD13',
       name: 'Jane',
-      surname: 'Doe'
+      surname: 'Doe',
     },
     status: {
       code: '12',
-      description: 'Delivered'
+      description: 'Delivered',
     },
     customer: {
       id: 'AA01',
       name: 'Albert',
-      surname: 'Einstein'
+      surname: 'Einstein',
     },
-    vat : {
+    vat: {
       id: 1,
       name: 'regular vat',
-      percentage: 18
+      percentage: 18,
     },
     orderCurrency: 'CHF',
-    orderAmount: 1000.00,
-    vatAmount: 180.00,
-    totalOrderAmount: 1180.00
+    orderAmount: 1000.0,
+    vatAmount: 180.0,
+    totalOrderAmount: 1180.0,
   },
   {
     id: 3,
@@ -64,25 +64,25 @@ export const data: IOrder[] = [
     salesPerson: {
       id: 'GSD13',
       name: 'Jane',
-      surname: 'Doe'
+      surname: 'Doe',
     },
     status: {
       code: '09',
-      description: 'Preparation'
+      description: 'Preparation',
     },
     customer: {
       id: 'AA01',
       name: 'Albert',
-      surname: 'Einstein'
+      surname: 'Einstein',
     },
-    vat : {
+    vat: {
       id: 1,
       name: 'regular vat',
-      percentage: 18
+      percentage: 18,
     },
     orderCurrency: 'CHF',
-    orderAmount: 1000.00,
-    vatAmount: 180.00,
-    totalOrderAmount: 1180.00
-  }
+    orderAmount: 1000.0,
+    vatAmount: 180.0,
+    totalOrderAmount: 1180.0,
+  },
 ];

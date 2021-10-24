@@ -1,31 +1,32 @@
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class OrderDetailFormService {
-
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
   buildForm() {
     return this.fb.group({
-      id: new FormControl({value: null, disabled:true}),
-      orderDate: new FormControl(),
+      id: new FormControl({ value: null, disabled: true }),
+      orderDate: new FormControl(
+        null,
+        Validators.compose([Validators.required])
+      ),
       deliveryDate: new FormControl(),
-      salesPersonId: new FormControl(),
-      salesPersonName: new FormControl({value: null, disabled:true}),
-      salesPersonLastname: new FormControl({value: null, disabled:true}),
-      statusCode: new FormControl(),
-      statusDescription: new FormControl({value: null, disabled:true}),
-      customerId: new FormControl(),
-      customerName: new FormControl({value: null, disabled:true}),
-      customerSurname: new FormControl({value: null, disabled:true}),
-      vatId: new FormControl(),
-      vatName: new FormControl({value: null, disabled:true}),
-      vatPercentage: new FormControl({value: null, disabled:true}),
-      orderCurrency: new FormControl(),
-      orderAmount: new FormControl({value: null, disabled:true}),
-      vatAmount: new FormControl({value: null, disabled:true}),
-      totalOrderAmount: new FormControl({value: null, disabled:true})
-    })
+      salesPerson: new FormControl(
+        null,
+        Validators.compose([Validators.required])
+      ),
+      orderStatus: new FormControl(
+        null,
+        Validators.compose([Validators.required])
+      ),
+      customerName: new FormControl({ value: null, disabled: false }),
+      customerSurname: new FormControl({ value: null, disabled: false }),
+      orderCurrency: new FormControl({ value: 'HRK', disabled: true }),
+      orderAmount: new FormControl({ value: null, disabled: true }),
+      vatAmount: new FormControl({ value: null, disabled: true }),
+      totalOrderAmount: new FormControl({ value: null, disabled: true }),
+    });
   }
 }

@@ -1,9 +1,11 @@
-<mat-form-field class="order-number-search-bar" appearance="fill">
-  <mat-label>Order number</mat-label>
-  <input matInput class='form-control' type="search" [formControl]="control" (keydown.enter)="emitOrderUpdate()" (change)="emitOrderUpdate()" >
-  <mat-icon matPrefix>search</mat-icon>
-  <button *ngIf="control?.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-form-field>
-
+<div class="container">
+  <mat-form-field class="order-number-search-bar" appearance="fill">
+    <mat-label>Order number</mat-label>
+    <input matInput class='form-control' type="search" [formControl]="control" (keydown.enter)="emitOrderUpdate()"
+      (change)="emitOrderUpdate()">
+    <mat-icon matPrefix>search</mat-icon>
+    <button *ngIf="control?.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>

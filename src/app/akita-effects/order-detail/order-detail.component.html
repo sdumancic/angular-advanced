@@ -1,103 +1,54 @@
 <div class="container" [formGroup]="form">
-  <div class="row">
+  <div class="general-section">
     <mat-form-field appearance="outline">
-      <mat-label>Id</mat-label>
-      <input matInput placeholder="Id" formControlName="id" />
-      <mat-icon matSuffix>id</mat-icon>
+      <mat-label>Sales Person</mat-label>
+      <mat-select formControlName="salesPerson" (selectionChange)="onSalesPersonChanged($event.value)">
+        <mat-option *ngFor="let salesPerson of (salesPersons$ | async)" [value]="salesPerson.id">
+          {{salesPerson.surname}}, {{salesPerson.name}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline">
       <mat-label>Order Date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="orderDate"/>
+      <input matInput [matDatepicker]="picker" formControlName="orderDate" />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker ></mat-datepicker>
+      <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline">
       <mat-label>Delivery Date</mat-label>
-      <input matInput [matDatepicker]="picker2" formControlName="deliveryDate"/>
+      <input matInput [matDatepicker]="picker2" formControlName="deliveryDate" />
       <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-      <mat-datepicker #picker2 ></mat-datepicker>
+      <mat-datepicker #picker2></mat-datepicker>
     </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="orderStatus">
+        <mat-option *ngFor="let status of (statuses$ | async)" [value]="status.code">
+          {{status.description}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
   </div>
 
-  <div class="row">
-    <mat-form-field appearance="outline">
-      <mat-label>Id</mat-label>
-      <input matInput placeholder="Id" formControlName="salesPersonId" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Sales person name</mat-label>
-      <input
-        matInput
-        placeholder="Sales person name"
-        formControlName="salesPersonName"
-      />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Sales person lastname</mat-label>
-      <input
-        matInput
-        placeholder="Sales person lastname"
-        formControlName="salesPersonLastname"
-      />
-    </mat-form-field>
-  </div>
 
-  <div class="row">
-    <mat-form-field appearance="outline">
-      <mat-label>Status code </mat-label>
-      <input matInput placeholder="Code" formControlName="statusCode" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Status description</mat-label>
-      <input
-        matInput
-        placeholder="Status description"
-        formControlName="statusDescription"
-      />
-    </mat-form-field>
-  </div>
 
-  <div class="row">
-    <mat-form-field appearance="outline">
-      <mat-label>Customer id</mat-label>
-      <input matInput placeholder="Customer id" formControlName="customerId" />
-    </mat-form-field>
+  <div class="customer-section">
+
     <mat-form-field appearance="outline">
       <mat-label>Customer name</mat-label>
-      <input
-        matInput
-        placeholder="Customer name"
-        formControlName="customerName"
-      />
+      <input matInput placeholder="Customer name" formControlName="customerName" />
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Customer surname</mat-label>
-      <input
-        matInput
-        placeholder="Customer surname"
-        formControlName="customerSurname"
-      />
+      <input matInput placeholder="Customer surname" formControlName="customerSurname" />
     </mat-form-field>
   </div>
 
-  <div class="row">
-    <mat-form-field appearance="outline">
-      <mat-label>Vat id</mat-label>
-      <input matInput placeholder="VAR id" formControlName="vatId" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>VAT name</mat-label>
-      <input matInput placeholder="VAT name" formControlName="vatName" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>VAT %</mat-label>
-      <input matInput placeholder="VAT %" formControlName="vatPercentage" />
-    </mat-form-field>
-  </div>
-
-  <div class="row">
+  <div class="amount-section">
     <mat-form-field appearance="outline">
       <mat-label>Currency</mat-label>
       <input matInput placeholder="Currency" formControlName="orderCurrency" />
@@ -105,25 +56,16 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Order amount</mat-label>
-      <input
-        matInput
-        placeholder="Order amount"
-        formControlName="orderAmount"
-      />
+      <input matInput placeholder="Order amount" formControlName="orderAmount" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>VAT amount</mat-label>
-      <input matInput placeholder="VAR amount" formControlName="vatAmount" />
+      <input matInput placeholder="VAT amount" formControlName="vatAmount" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Total Amount</mat-label>
-      <input
-        matInput
-        placeholder="Total Amount"
-        formControlName="totalOrderAmount"
-      />
+      <input matInput placeholder="Total Amount" formControlName="totalOrderAmount" />
     </mat-form-field>
   </div>
-</div>
