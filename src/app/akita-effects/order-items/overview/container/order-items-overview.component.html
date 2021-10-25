@@ -1,0 +1,6 @@
+<div class="container">
+  <button mat-stroked-button color="primary" (click)="onAddItem()" class='add-btn'>
+    <mat-icon matPrefix>add</mat-icon> Add item
+  </button>
+  <app-order-items-search-results [searchResults]="orderItemsSearchResults"></app-order-items-search-results>
+</div>

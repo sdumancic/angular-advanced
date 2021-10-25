@@ -11,11 +11,14 @@ import { ToolbarComponent } from './order-entry/presentation/toolbar/toolbar.com
 import { OrderDetailComponent } from './order-detail/order-detail.component';
 
 import { OrderEntryFacadeService } from './order-entry/facade/order-entry-facade.service';
-import { OrderItemsOverviewComponent } from './order-items-overview/container/order-items-overview.component';
-import { OrderItemsSearchResultsComponent } from './order-items-overview/presentation/order-items-search-results/order-items-search-results.component';
+
+import { OrderItemsSearchResultsComponent } from './order-items/overview/presentation/order-items-search-results/order-items-search-results.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { OrderItemsOverviewComponent } from './order-items/overview/container/order-items-overview.component';
+import { CreateItemDialogComponent } from './order-items/create/container/dialog/create-item-dialog/create-item-dialog.component';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -36,7 +39,12 @@ import { MatSortModule } from '@angular/material/sort';
     OrderDetailComponent,
     OrderItemsOverviewComponent,
     OrderItemsSearchResultsComponent,
+    CreateItemDialogComponent,
   ],
-  providers: [OrderEntryFacadeService],
+  providers: [
+    OrderEntryFacadeService,
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
+  ],
+  entryComponents: [CreateItemDialogComponent],
 })
 export class AkitaEffectsModule {}

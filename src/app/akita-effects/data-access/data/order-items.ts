@@ -14,6 +14,7 @@ export const data: IOrderItem[] = [
     },
     amount: 100,
     vatAmount: 18,
+    quantity: 1,
     totalAmount: 118.0,
   },
   {
@@ -29,6 +30,7 @@ export const data: IOrderItem[] = [
     },
     amount: 1000,
     vatAmount: 18,
+    quantity: 1,
     totalAmount: 1180.0,
   },
   {
@@ -44,6 +46,7 @@ export const data: IOrderItem[] = [
     },
     amount: 100,
     vatAmount: 18,
+    quantity: 1,
     totalAmount: 118.0,
   },
   {
@@ -59,6 +62,7 @@ export const data: IOrderItem[] = [
     },
     amount: 100,
     vatAmount: 18,
+    quantity: 1,
     totalAmount: 118.0,
   },
   {
@@ -74,6 +78,7 @@ export const data: IOrderItem[] = [
     },
     amount: 25.99,
     vatAmount: 4.99,
+    quantity: 1,
     totalAmount: 29.99,
   },
   {
@@ -89,6 +94,7 @@ export const data: IOrderItem[] = [
     },
     amount: 800,
     vatAmount: 100,
+    quantity: 1,
     totalAmount: 900.0,
   },
 ];
