@@ -1,11 +1,14 @@
 import { Injectable, OnInit } from '@angular/core';
-import { IOrderItem } from './order-items.model';
+import { IOrderItem, IProduct, IProductGroup } from './order-items.model';
 import { IOrder, IOrderStatus, ISalesPerson } from './order.model';
 import * as orders from './data/orders';
 import * as items from './data/order-items';
 import * as salesPersons from './data/sales-persons';
 import * as orderStatus from './data/order-statuses';
+import * as productGroups from './data/product-groups';
+import * as products from './data/products';
 import { Observable, of, zip } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -15,12 +18,16 @@ export class OrdersService {
   private items: IOrderItem[] = [];
   private salesPersons: ISalesPerson[] = [];
   private orderStatus: IOrderStatus[] = [];
+  private productGroups: IProductGroup[] = [];
+  private products: IProduct[] = [];
 
   constructor() {
     this.orders = orders.data;
     this.items = items.data;
     this.salesPersons = salesPersons.data;
     this.orderStatus = orderStatus.data;
+    this.productGroups = productGroups.data;
+    this.products = products.data;
   }
 
   public fetchOrderDetails$(id: number): Observable<IOrder | null> {
@@ -39,10 +46,22 @@ export class OrdersService {
     return of(this.salesPersons);
   }
 
-  public fetchMetadata$() {
-    const o1 = of(this.salesPersons);
-    const o2 = of(this.orderStatus);
-    return zip(o1, o2);
+  public fetchProductMetadata$() {
+    const o1 = of(this.productGroups);
+    const o2 = of(this.products);
+    return zip(o1, o2).pipe(shareReplay(1));
+  }
+
+  public fetchProducts$() {
+    return this.fetchProductMetadata$().pipe(
+      map(([groups, products]) => products)
+    );
+  }
+
+  public fetchProductsGroups$() {
+    return this.fetchProductMetadata$().pipe(
+      map(([groups, products]) => groups)
+    );
   }
 
   public fetchSalesPersonById(id: string) {

@@ -17,4 +17,6 @@ export interface IProductGroup {
 export interface IProduct {
   code: string;
   name: string;
+  price?: number;
+  productGroupCode?: string;
 }

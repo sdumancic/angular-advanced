@@ -18,8 +18,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   form: FormGroup;
   private unsubscribe$ = new Subject();
 
-  salesPersons$ = this.facade.salesPersons$();
-  statuses$ = this.facade.statuses$();
+  //salesPersons$ = this.facade.salesPersons$();
+  //statuses$ = this.facade.statuses$();
 
   get order() {
     return this._order;

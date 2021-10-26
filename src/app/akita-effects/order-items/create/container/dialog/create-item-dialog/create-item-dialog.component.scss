@@ -6,3 +6,11 @@
   display: flex;
   flex-direction: column;
 }
+
+.quantity-amount-section, .vat-total-section {
+  display: flex;
+}
+
+.section-item {
+  flex: 1 0 auto;
+}
