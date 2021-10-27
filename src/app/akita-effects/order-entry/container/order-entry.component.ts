@@ -69,6 +69,12 @@ export class OrderEntryComponent implements OnInit {
   }
 
   onItemCreated(item: IOrderItem) {
-    console.log('onItemCreated --> ', item);
+    this.facade
+      .addOrderItem$(item)
+      .pipe(take(1))
+      .subscribe((result) => {
+        console.log('created item ', result);
+        this.orderItems = [...this.orderItems, result];
+      });
   }
 }

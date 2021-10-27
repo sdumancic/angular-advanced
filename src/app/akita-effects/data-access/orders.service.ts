@@ -71,4 +71,10 @@ export class OrdersService {
   public fetchOrderStatusById(id: string) {
     return of(this.orderStatus.find((i) => i.code === id));
   }
+
+  public addOrderItem$(item: IOrderItem): Observable<IOrderItem> {
+    item.id = Math.random();
+    this.items.push(item);
+    return of(item);
+  }
 }

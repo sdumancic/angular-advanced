@@ -14,6 +14,7 @@ import { IOrderItemsSearchResultsUI } from '../facade/order-items-search-results
   providers: [OrderItemsFacadeService],
 })
 export class OrderItemsOverviewComponent implements OnInit {
+  @Input() orderId: number;
   @Input()
   set orderItems(value: IOrderItem[]) {
     if (deepEqualArray(this._orderItems, value) === false) {
@@ -49,6 +50,7 @@ export class OrderItemsOverviewComponent implements OnInit {
     dialogConfig.height = '500px';
     dialogConfig.width = '500px';
     dialogConfig.data = {
+      orderId: this.orderId,
       productGroups$: this.facade.productGroups$,
       products$: this.facade.products$,
     };

@@ -5,17 +5,20 @@ import { IOrder } from '../../data-access/order.model';
 import { IOrderItem } from '../../data-access/order-items.model';
 
 @Injectable({
-  providedIn: 'any'
+  providedIn: 'any',
 })
 export class OrderEntryFacadeService {
+  constructor(private orderService: OrdersService) {}
 
-  constructor(private orderService: OrdersService) { }
-
-  public getOrderDetails$(orderId: number): Observable<IOrder>{
+  public getOrderDetails$(orderId: number): Observable<IOrder> {
     return this.orderService.fetchOrderDetails$(orderId);
   }
 
-  public getOrderItems$(orderId: number):  Observable<IOrderItem[]>{
+  public getOrderItems$(orderId: number): Observable<IOrderItem[]> {
     return this.orderService.fetchOrderItems$(orderId);
+  }
+
+  public addOrderItem$(item: IOrderItem): Observable<IOrderItem> {
+    return this.orderService.addOrderItem$(item);
   }
 }

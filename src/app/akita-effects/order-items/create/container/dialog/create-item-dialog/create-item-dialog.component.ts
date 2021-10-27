@@ -7,9 +7,10 @@ import {
   IProductGroup,
   IProduct,
 } from '../../../../../data-access/order-items.model';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { filter, map, take, takeUntil } from 'rxjs/operators';
 
 export interface DialogData {
+  orderId: number;
   productGroups$: Observable<IProductGroup[]>;
   products$: Observable<IProduct[]>;
 }
@@ -36,7 +37,7 @@ export class CreateItemDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.form = this.formService.buildForm();
+    this.form = this.formService.buildForm(this.data.orderId);
     this.form.patchValue({ quantity: 1 });
     merge(
       this.amountControl().valueChanges,
@@ -53,19 +54,32 @@ export class CreateItemDialogComponent implements OnInit, OnDestroy {
       });
   }
 
+  getProductGroupName$(code: string): Observable<string> {
+    return this.data.productGroups$.pipe(
+      map((groups) => groups.filter((group) => group.code === code)),
+      map((group) => group[0].name)
+    );
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   postItem() {
-    console.log(this.form.value);
-    this.dialogRef.close(this.form.value);
+    this.dialogRef.close(this.form.getRawValue());
   }
 
-  onProductGroupChanged(productGroup) {
+  onProductGroupChanged(code) {
+    this.getProductGroupName$(code)
+      .pipe(take(1))
+      .subscribe((name) => {
+        this.form.patchValue({ productGroupName: name });
+      });
+
     this.filteredProducts$ = this.data.products$.pipe(
+      take(1),
       map((products) =>
-        products.filter((product) => product.productGroupCode === productGroup)
+        products.filter((product) => product.productGroupCode === code)
       )
     );
   }
