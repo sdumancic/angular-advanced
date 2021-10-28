@@ -7,11 +7,6 @@ import { of } from 'rxjs';
 export class OrderDetailFacadeService {
   constructor(private orderService: OrdersService) {}
 
-  /*
-  metadata$() {
-    return this.orderService.fetchMetadata$();
-  }*/
-
   salesPersons$() {
     return this.orderService.fetchSalesPersons$();
   }
@@ -24,10 +19,9 @@ export class OrderDetailFacadeService {
     return this.orderService.fetchOrderStatusById(id);
   }
 
-  /*
   statuses$() {
-    return this.metadata$().pipe(map(([salesPersons, statuses]) => statuses));
-  }*/
+    return this.orderService.fetchOrderStatuses$();
+  }
 
   orderDetails$(orderId: number) {
     return this.orderService.fetchOrderDetails$(orderId);

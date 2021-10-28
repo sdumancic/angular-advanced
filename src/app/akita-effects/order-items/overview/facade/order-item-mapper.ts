@@ -8,14 +8,39 @@ export class OrderItemMapper {
     return items.map((item) => {
       return <IOrderItemsSearchResultsUI>{
         id: item.id,
+        orderId: item.orderId,
         productGroupCode: item.productGroup.code,
         productGroupName: item.productGroup.name,
         productCode: item.product.code,
         productName: item.product.name,
         amount: item.amount,
+        quantity: item.quantity,
         vatAmount: item.vatAmount,
         totalAmount: item.totalAmount,
       };
     });
+  }
+
+  static fromNewSearchResultsUIToResource(
+    item: IOrderItemsSearchResultsUI
+  ): IOrderItem {
+    return <IOrderItem>{
+      id: item.id,
+      orderId: item.orderId,
+      productGroup: {
+        code: item.productGroupCode,
+        name: item.productGroupName,
+      },
+      product: {
+        code: item.productCode,
+        name: item.productName,
+        price: null,
+        productGroupCode: null,
+      },
+      amount: item.amount,
+      vatAmount: item.vatAmount,
+      totalAmount: item.totalAmount,
+      quantity: item.quantity,
+    };
   }
 }

@@ -7,7 +7,7 @@ import * as salesPersons from './data/sales-persons';
 import * as orderStatus from './data/order-statuses';
 import * as productGroups from './data/product-groups';
 import * as products from './data/products';
-import { Observable, of, zip } from 'rxjs';
+import { Observable, of, throwError, zip } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -31,7 +31,13 @@ export class OrdersService {
   }
 
   public fetchOrderDetails$(id: number): Observable<IOrder | null> {
-    return of(this.orders.find((o) => o.id === +id));
+    const order = this.orders.find((o) => o.id === +id);
+    if (!order) {
+      return throwError(
+        `Order with id ${id} does not exist, refine your criteria`
+      );
+    }
+    return of(order);
   }
 
   public fetchOrderItems$(
@@ -44,6 +50,10 @@ export class OrdersService {
 
   public fetchSalesPersons$() {
     return of(this.salesPersons);
+  }
+
+  public fetchOrderStatuses$() {
+    return of(this.orderStatus);
   }
 
   public fetchProductMetadata$() {

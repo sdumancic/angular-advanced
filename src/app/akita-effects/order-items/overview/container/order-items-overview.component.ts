@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { take } from 'rxjs/operators';
 import { IOrderItem } from 'src/app/akita-effects/data-access/order-items.model';
 import { deepEqualArray } from 'src/app/akita-effects/util/deep-equal-utils';
 import { CreateItemDialogComponent } from '../../create/container/dialog/create-item-dialog/create-item-dialog.component';
@@ -25,7 +26,6 @@ export class OrderItemsOverviewComponent implements OnInit {
       }
     }
   }
-  @Output() newItemEvent = new EventEmitter();
 
   private _orderItems: IOrderItem[];
   orderItemsSearchResults: IOrderItemsSearchResultsUI[] = [];
@@ -56,10 +56,20 @@ export class OrderItemsOverviewComponent implements OnInit {
     };
 
     const dialogRef = this.dialog.open(CreateItemDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.newItemEvent.emit(result);
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((result) => {
+        if (result) {
+          const newItem =
+            OrderItemMapper.fromNewSearchResultsUIToResource(result);
+          newItem.id = -1 * (this._orderItems.length + 1);
+          this._orderItems = [...this._orderItems, newItem];
+          this.orderItemsSearchResults =
+            OrderItemMapper.fromResourceToOrderItemSearchResultsUI(
+              this._orderItems
+            );
+        }
+      });
   }
 }

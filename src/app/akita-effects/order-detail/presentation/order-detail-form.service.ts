@@ -13,7 +13,7 @@ export class OrderDetailFormService {
         Validators.compose([Validators.required])
       ),
       deliveryDate: new FormControl(),
-      salesPerson: new FormControl(
+      salesPersonId: new FormControl(
         null,
         Validators.compose([Validators.required])
       ),

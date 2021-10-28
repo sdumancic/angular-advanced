@@ -2,7 +2,7 @@
   <div class="general-section">
     <mat-form-field appearance="outline">
       <mat-label>Sales Person</mat-label>
-      <mat-select formControlName="salesPerson" (selectionChange)="onSalesPersonChanged($event.value)">
+      <mat-select formControlName="salesPersonId" (selectionChange)="onSalesPersonChanged($event.value)">
         <mat-option *ngFor="let salesPerson of (salesPersons$ | async)" [value]="salesPerson.id">
           {{salesPerson.surname}}, {{salesPerson.name}}
         </mat-option>

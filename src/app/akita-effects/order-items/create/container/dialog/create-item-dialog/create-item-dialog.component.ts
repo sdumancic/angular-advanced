@@ -61,6 +61,13 @@ export class CreateItemDialogComponent implements OnInit, OnDestroy {
     );
   }
 
+  getProductName$(code: string): Observable<string> {
+    return this.data.products$.pipe(
+      map((products) => products.filter((product) => product.code === code)),
+      map((product) => product[0].name)
+    );
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -82,6 +89,14 @@ export class CreateItemDialogComponent implements OnInit, OnDestroy {
         products.filter((product) => product.productGroupCode === code)
       )
     );
+  }
+
+  onProductChanged(code) {
+    this.getProductName$(code)
+      .pipe(take(1))
+      .subscribe((name) => {
+        this.form.patchValue({ productName: name });
+      });
   }
 
   amountControl(): FormControl {

@@ -61,20 +61,18 @@ export class OrderEntryComponent implements OnInit {
             this.orderItems = orderItems;
           })
         )
-        .subscribe(() => {
-          this.orderId = orderIdNumber;
-          this.lastEmittedOrderId = orderIdNumber;
-        });
+        .subscribe(
+          () => {
+            this.orderId = orderIdNumber;
+            this.lastEmittedOrderId = orderIdNumber;
+          },
+          (error) => {
+            console.log(error);
+            this.orderId = null;
+            this.order = null;
+            this.orderItems = [];
+          }
+        );
     }
-  }
-
-  onItemCreated(item: IOrderItem) {
-    this.facade
-      .addOrderItem$(item)
-      .pipe(take(1))
-      .subscribe((result) => {
-        console.log('created item ', result);
-        this.orderItems = [...this.orderItems, result];
-      });
   }
 }

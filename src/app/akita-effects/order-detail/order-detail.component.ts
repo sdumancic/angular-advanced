@@ -18,8 +18,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   form: FormGroup;
   private unsubscribe$ = new Subject();
 
-  //salesPersons$ = this.facade.salesPersons$();
-  //statuses$ = this.facade.statuses$();
+  salesPersons$ = this.facade.salesPersons$();
+  statuses$ = this.facade.statuses$();
 
   get order() {
     return this._order;
@@ -29,10 +29,13 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   set order(value: IOrder) {
     if (this._order !== value) {
       this._order = value;
-      if (value) {
+      if (this.form) {
         this.form.patchValue(
           OrderDetailMapper.fromResourceToOrderDetailUI(value)
         );
+        if (this._order) {
+          this.form.enable();
+        }
       }
     }
   }
@@ -49,6 +52,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form = this.formService.buildForm();
+    this.form.disable();
   }
 
   onSalesPersonChanged(id: string) {

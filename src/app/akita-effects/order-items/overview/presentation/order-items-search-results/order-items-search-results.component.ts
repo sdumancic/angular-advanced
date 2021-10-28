@@ -34,8 +34,10 @@ export class OrderItemsSearchResultsComponent
   dataSource: MatTableDataSource<IOrderItemsSearchResultsUI>;
 
   displayedColumns = [
+    'id',
     'productGroupName',
     'productName',
+    'quantity',
     'amount',
     'vatAmount',
     'totalAmount',
