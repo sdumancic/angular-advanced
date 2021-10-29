@@ -3,14 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AkitaEffectsRoutingModule } from './akita-effects-routing.module';
 
 import { MaterialModule } from '../shared/modules/material/material.module';
-import { OrderEntryComponent } from './order-entry/container/order-entry.component';
-import { ToolbarComponent } from './order-entry/presentation/toolbar/toolbar.component';
-import { OrderDetailComponent } from './order-detail/order-detail.component';
-
-import { OrderEntryFacadeService } from './order-entry/facade/order-entry-facade.service';
 
 import { OrderItemsSearchResultsComponent } from './order-items/overview/presentation/order-items-search-results/order-items-search-results.component';
 import { MatTableModule } from '@angular/material/table';
@@ -20,10 +14,16 @@ import { OrderItemsOverviewComponent } from './order-items/overview/container/or
 import { CreateItemDialogComponent } from './order-items/create/container/dialog/create-item-dialog/create-item-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
+import { OrderDetailComponent } from './order-detail/order-detail.component';
+import { OrderEntryRoutingModule } from './order-entry-routing.module';
+import { ToolbarComponent } from './order-toolbar/toolbar.component';
+import { HomeFacadeService } from './home/facade/home-facade.service';
+import { HomeComponent } from './home/container/home.component';
+
 @NgModule({
   imports: [
     CommonModule,
-    AkitaEffectsRoutingModule,
+    OrderEntryRoutingModule,
     HttpClientModule,
     MaterialModule,
     ReactiveFormsModule,
@@ -34,7 +34,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     MatSortModule,
   ],
   declarations: [
-    OrderEntryComponent,
+    HomeComponent,
     ToolbarComponent,
     OrderDetailComponent,
     OrderItemsOverviewComponent,
@@ -42,9 +42,9 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     CreateItemDialogComponent,
   ],
   providers: [
-    OrderEntryFacadeService,
+    HomeFacadeService,
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
   ],
   entryComponents: [CreateItemDialogComponent],
 })
-export class AkitaEffectsModule {}
+export class OrderEntryModule {}

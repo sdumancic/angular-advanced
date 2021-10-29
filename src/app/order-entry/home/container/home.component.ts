@@ -1,24 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Subject, zip } from 'rxjs';
-import {
-  takeUntil,
-  switchMap,
-  mergeMap,
-  tap,
-  concatMap,
-  take,
-} from 'rxjs/operators';
+import { Subject, zip } from 'rxjs';
+import { take, takeUntil, tap } from 'rxjs/operators';
 import { IOrderItem } from '../../data-access/order-items.model';
 import { IOrder } from '../../data-access/order.model';
-import { OrderEntryFacadeService } from '../facade/order-entry-facade.service';
+import { HomeFacadeService } from '../facade/home-facade.service';
 
 @Component({
   selector: 'app-order-entry',
-  templateUrl: './order-entry.component.html',
-  styleUrls: ['./order-entry.component.scss'],
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
 })
-export class OrderEntryComponent implements OnInit {
+export class HomeComponent implements OnInit {
   public orderId: number = null;
   public order: IOrder = null;
   public orderItems: IOrderItem[] = null;
@@ -26,7 +19,7 @@ export class OrderEntryComponent implements OnInit {
   private lastEmittedOrderId: number = null;
 
   constructor(
-    private facade: OrderEntryFacadeService,
+    private facade: HomeFacadeService,
     private route: ActivatedRoute
   ) {}
 

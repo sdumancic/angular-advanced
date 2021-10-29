@@ -5,81 +5,77 @@
 <p>Pooling count times: {{poolingService.pooling$ | async}}</p>
 <table border="1">
   <tbody>
-  <tr>
-    <td>
-      <a routerLink='/lazy'>/lazy</a>
-    </td>
-    <td>
-      Load lazy module
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a routerLink='/shared-forms'>/shared-forms</a>
-    </td>
-    <td>
-      Shared forms
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a routerLink='/async-validators'>/async-validators</a>
-    </td>
-    <td>
-      Async Validators
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a routerLink='/akita-home'>/akita-home</a>
-    </td>
-    <td>
-      Akita
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a routerLink='/akita-effects'>/akita-effects</a>
-    </td>
-    <td>
-      Order Entry with Akita
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a routerLink='/material-home'>/material-home</a>
-    </td>
-    <td>
-      Material
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a routerLink='/change-detection-home'>/change-detection-home</a>
-    </td>
-    <td>
-      Change Detection
-    </td>
-  </tr>
-</tbody>
+    <tr>
+      <td>
+        <a routerLink='/lazy'>/lazy</a>
+      </td>
+      <td>
+        Load lazy module
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a routerLink='/shared-forms'>/shared-forms</a>
+      </td>
+      <td>
+        Shared forms
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a routerLink='/async-validators'>/async-validators</a>
+      </td>
+      <td>
+        Async Validators
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a routerLink='/akita-home'>/akita-home</a>
+      </td>
+      <td>
+        Akita
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a routerLink='/order-entry'>/order-entry</a>
+      </td>
+      <td>
+        Order Entry with Akita
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a routerLink='/material-home'>/material-home</a>
+      </td>
+      <td>
+        Material
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a routerLink='/change-detection-home'>/change-detection-home</a>
+      </td>
+      <td>
+        Change Detection
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 <br>
 <ng-container [formGroup]="form">
   <app-search-form-field-container formControlName="first" type="text"></app-search-form-field-container>
   <app-search-form-field-container formControlName="second" type="number"></app-search-form-field-container>
-  <app-search-form-field-buttons-container formControlName="third" type="text"></app-search-form-field-buttons-container>
-  <app-search-form-field-buttons-container formControlName="fourth" type="number"></app-search-form-field-buttons-container>
+  <app-search-form-field-buttons-container formControlName="third" type="text">
+  </app-search-form-field-buttons-container>
+  <app-search-form-field-buttons-container formControlName="fourth" type="number">
+  </app-search-form-field-buttons-container>
   <mat-form-field appearance="outline">
     <mat-label>Outline form field</mat-label>
-    <input matInput placeholder="Placeholder" >
+    <input matInput placeholder="Placeholder">
     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
     <mat-hint>Hint</mat-hint>
   </mat-form-field>
 </ng-container>
-
-
-
-
-
-

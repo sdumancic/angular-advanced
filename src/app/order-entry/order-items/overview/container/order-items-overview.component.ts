@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { take } from 'rxjs/operators';
-import { IOrderItem } from 'src/app/akita-effects/data-access/order-items.model';
-import { deepEqualArray } from 'src/app/akita-effects/util/deep-equal-utils';
+import { IOrderItem } from 'src/app/order-entry/data-access/order-items.model';
+import { deepEqualArray } from 'src/app/order-entry/util/deep-equal-utils';
 import { CreateItemDialogComponent } from '../../create/container/dialog/create-item-dialog/create-item-dialog.component';
 import { OrderItemMapper } from '../facade/order-item-mapper';
 import { OrderItemsFacadeService } from '../facade/order-items-facade.service';
