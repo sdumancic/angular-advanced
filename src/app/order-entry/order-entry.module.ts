@@ -19,6 +19,9 @@ import { OrderEntryRoutingModule } from './order-entry-routing.module';
 import { ToolbarComponent } from './order-toolbar/toolbar.component';
 import { HomeFacadeService } from './home/facade/home-facade.service';
 import { HomeComponent } from './home/container/home.component';
+import { ContentLoaderModule } from '@ngneat/content-loader';
+import { EditItemDialogComponent } from './order-items/edit/container/edit-item-dialog.component';
+import { OrderItemDetailComponent } from './order-items/shared/container/order-item-detail.component';
 
 @NgModule({
   imports: [
@@ -32,6 +35,7 @@ import { HomeComponent } from './home/container/home.component';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    ContentLoaderModule,
   ],
   declarations: [
     HomeComponent,
@@ -40,6 +44,8 @@ import { HomeComponent } from './home/container/home.component';
     OrderItemsOverviewComponent,
     OrderItemsSearchResultsComponent,
     CreateItemDialogComponent,
+    EditItemDialogComponent,
+    OrderItemDetailComponent,
   ],
   providers: [
     HomeFacadeService,

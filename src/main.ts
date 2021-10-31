@@ -12,7 +12,6 @@ if (environment.production) {
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .then((module) => {
-    console.log(module.injector.get(ApplicationRef).components[0]);
     enableDebugTools(module.injector.get(ApplicationRef).components[0]);
   })
   .catch((err) => console.error(err));

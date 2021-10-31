@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, zip } from 'rxjs';
-import { take, takeUntil, tap } from 'rxjs/operators';
+import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { IOrderItem } from '../../data-access/order-items.model';
 import { IOrder } from '../../data-access/order.model';
 import { HomeFacadeService } from '../facade/home-facade.service';
@@ -14,7 +14,6 @@ import { HomeFacadeService } from '../facade/home-facade.service';
 export class HomeComponent implements OnInit {
   public orderId: number = null;
   public order: IOrder = null;
-  public orderItems: IOrderItem[] = null;
   private unsubscribe$ = new Subject();
   private lastEmittedOrderId: number = null;
 
@@ -43,15 +42,12 @@ export class HomeComponent implements OnInit {
       !Number.isNaN(orderIdNumber) &&
       this.lastEmittedOrderId !== orderIdNumber
     ) {
-      zip(
-        this.facade.getOrderDetails$(orderIdNumber),
-        this.facade.getOrderItems$(orderIdNumber)
-      )
+      this.facade
+        .getOrderDetails$(orderIdNumber)
         .pipe(
           take(1),
-          tap(([order, orderItems]) => {
+          tap((order) => {
             this.order = order;
-            this.orderItems = orderItems;
           })
         )
         .subscribe(
@@ -63,7 +59,6 @@ export class HomeComponent implements OnInit {
             console.log(error);
             this.orderId = null;
             this.order = null;
-            this.orderItems = [];
           }
         );
     }

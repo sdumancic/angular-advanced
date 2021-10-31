@@ -6,7 +6,7 @@ import { OrderItemsQuery } from '../../state/order-items.query';
 import { OrderItemsStore } from '../../state/order-items.store';
 
 @Injectable()
-export class CreateItemFacadeService {
+export class OrderItemFacadeService {
   constructor(
     private query: OrderItemsQuery,
     private orderService: OrdersService,

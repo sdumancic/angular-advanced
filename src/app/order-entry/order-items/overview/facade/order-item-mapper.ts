@@ -1,5 +1,5 @@
 import { IOrderItem } from 'src/app/order-entry/data-access/order-items.model';
-import { IOrderItemsSearchResultsUI } from './order-items-search-results-ui.model';
+import { IOrderItemsSearchResultsUI } from '../presentation/order-items-search-results/order-items-search-results-ui.model';
 
 export class OrderItemMapper {
   static fromResourceToOrderItemSearchResultsUI(

@@ -1,48 +1,65 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { take } from 'rxjs/operators';
-import { IOrderItem } from 'src/app/order-entry/data-access/order-items.model';
-import { deepEqualArray } from 'src/app/order-entry/util/deep-equal-utils';
+import { Subject } from 'rxjs';
+import { debounceTime, take, takeUntil } from 'rxjs/operators';
 import { CreateItemDialogComponent } from '../../create/container/dialog/create-item-dialog/create-item-dialog.component';
-import { OrderItemMapper } from '../facade/order-item-mapper';
-import { OrderItemsFacadeService } from '../facade/order-items-facade.service';
-import { IOrderItemsSearchResultsUI } from '../facade/order-items-search-results-ui.model';
+import { OrderItemsQuery } from '../../state/order-items.query';
+import { OrderItemsOverviewFacadeService } from '../facade/order-items-overview-facade.service';
+import { IOrderItemsSearchResultsUI } from '../presentation/order-items-search-results/order-items-search-results-ui.model';
+import { StateHistoryPlugin } from '@datorama/akita';
+import { EditItemDialogComponent } from '../../edit/container/edit-item-dialog.component';
 
 @Component({
   selector: 'app-order-items-overview',
   templateUrl: './order-items-overview.component.html',
   styleUrls: ['./order-items-overview.component.scss'],
-  providers: [OrderItemsFacadeService],
+  providers: [OrderItemsOverviewFacadeService],
 })
-export class OrderItemsOverviewComponent implements OnInit {
-  @Input() orderId: number;
-  @Input()
-  set orderItems(value: IOrderItem[]) {
-    if (deepEqualArray(this._orderItems, value) === false) {
-      this._orderItems = value;
-      if (value) {
-        this.orderItemsSearchResults =
-          OrderItemMapper.fromResourceToOrderItemSearchResultsUI(value);
-      }
+export class OrderItemsOverviewComponent implements OnInit, OnDestroy {
+  private _orderId: number;
+  isLoading$ = this.query.loading$;
+  orderItemsSearchResults: IOrderItemsSearchResultsUI[];
+  @Input() set orderId(value: number) {
+    if (this.stateHistory) {
+      this.stateHistory.ignoreNext();
     }
+    this.facade.init(value);
+    this._orderId = value;
   }
 
-  private _orderItems: IOrderItem[];
-  orderItemsSearchResults: IOrderItemsSearchResultsUI[] = [];
-
-  get orderItems() {
-    return this._orderItems;
+  get orderId() {
+    return this._orderId;
   }
+
+  filterControl: FormControl = new FormControl();
+  private unsubscribe$ = new Subject<void>();
+
+  stateHistory: StateHistoryPlugin;
 
   constructor(
     public dialog: MatDialog,
-    private facade: OrderItemsFacadeService
-  ) {}
-
-  ngOnInit(): void {
-    this.facade.init();
+    private facade: OrderItemsOverviewFacadeService,
+    private query: OrderItemsQuery
+  ) {
+    this.stateHistory = new StateHistoryPlugin(this.query, {
+      watchProperty: 'entities',
+    });
   }
 
+  ngOnInit() {
+    this.filterControl.valueChanges
+      .pipe(takeUntil(this.unsubscribe$), debounceTime(200))
+      .subscribe((filter) => {
+        this.facade.setFilter(filter);
+      });
+
+    this.query.selectFilteredItems$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((items) => {
+        this.orderItemsSearchResults = items;
+      });
+  }
   onAddItem() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
@@ -51,8 +68,8 @@ export class OrderItemsOverviewComponent implements OnInit {
     dialogConfig.width = '500px';
     dialogConfig.data = {
       orderId: this.orderId,
-      productGroups$: this.facade.productGroups$,
-      products$: this.facade.products$,
+      productGroups$: this.query.productGroups$,
+      products$: this.query.products$,
     };
 
     const dialogRef = this.dialog.open(CreateItemDialogComponent, dialogConfig);
@@ -61,15 +78,54 @@ export class OrderItemsOverviewComponent implements OnInit {
       .pipe(take(1))
       .subscribe((result) => {
         if (result) {
-          const newItem =
-            OrderItemMapper.fromNewSearchResultsUIToResource(result);
-          newItem.id = -1 * (this._orderItems.length + 1);
-          this._orderItems = [...this._orderItems, newItem];
-          this.orderItemsSearchResults =
-            OrderItemMapper.fromResourceToOrderItemSearchResultsUI(
-              this._orderItems
-            );
+          result.id = -1 * (this.query.getCount() + 1);
+          this.facade.addOrderItem(result);
         }
       });
+  }
+
+  onEditItem(item: IOrderItemsSearchResultsUI) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '500px';
+    dialogConfig.width = '500px';
+    dialogConfig.data = {
+      orderId: this.orderId,
+      orderItem: item,
+      productGroups$: this.query.productGroups$,
+      products$: this.query.products$,
+    };
+
+    const dialogRef = this.dialog.open(EditItemDialogComponent, dialogConfig);
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((result) => {
+        if (result) {
+          this.facade.updateOrderItem(result);
+        }
+      });
+  }
+
+  numPastActions() {
+    return (this.stateHistory as any).history?.past?.length;
+  }
+
+  numFutureActions() {
+    return (this.stateHistory as any).history?.future.length;
+  }
+
+  undo() {
+    this.stateHistory.undo();
+  }
+
+  redo() {
+    this.stateHistory.redo();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

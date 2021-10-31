@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Edit order item for order {{orderId}}</h2>
+
+<mat-dialog-content>
+  <app-order-item-detail #detail [orderId]="orderId" [orderItem]="orderItem"></app-order-item-detail>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color='primary' [disabled]="!detail.form.valid" [mat-dialog-close]="true"
+    (click)="postItem()">Create</button>
+  <button mat-raised-button color='warn' mat-dialog-close (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+
+</mat-dialog-actions>

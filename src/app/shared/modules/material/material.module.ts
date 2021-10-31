@@ -18,6 +18,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatBadgeModule } from '@angular/material/badge';
 
 const materialModules = [
   MatIconModule,
@@ -38,6 +39,7 @@ const materialModules = [
   MatDatepickerModule,
   MatNativeDateModule,
   MatDialogModule,
+  MatBadgeModule,
 ];
 
 @NgModule({

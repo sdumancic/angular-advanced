@@ -1,59 +1,88 @@
-<div class="mat-elevation-z4">
-  <table mat-table class="full-width-table" matSort aria-label="Elements" [dataSource]="dataSource">
+<div>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let row">
-        <button mat-icon-button (click)="onDel(row)">
-          <mat-icon>delete</mat-icon>
-        </button>
-        <button mat-icon-button (click)="onEdit(row)">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+  <div class="mat-elevation-z4">
 
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-      <td mat-cell *matCellDef="let row">{{row.id}}</td>
-    </ng-container>
+    <table mat-table class="full-width-table" matSort aria-label="Elements" [dataSource]="dataSource">
 
-    <ng-container matColumnDef="productGroupName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product group</th>
-      <td mat-cell *matCellDef="let row">{{row.productGroupName}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="productName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
-      <td mat-cell *matCellDef="let row">{{row.productName}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="quantity">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
-      <td mat-cell *matCellDef="let row">{{row.quantity}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="amount">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
-      <td mat-cell *matCellDef="let row">{{row.amount}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="vatAmount">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>VAT amount</th>
-      <td mat-cell *matCellDef="let row">{{row.vatAmount}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="totalAmount">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Amount</th>
-      <td mat-cell *matCellDef="let row">{{row.totalAmount}}</td>
-    </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="onDel(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button (click)="onEdit(row)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <ng-container matColumnDef="undo-redo">
+        <th mat-header-cell *matHeaderCellDef>Undo/Redo</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button [disabled]="!stateHistoryEntity.hasPast(row.id)" (click)="undo(row.id)">
+            <mat-icon>undo</mat-icon>
+          </button>
+          <button mat-icon-button [disabled]="!stateHistoryEntity.hasFuture(row.id)" (click)="redo(row.id)">
+            <mat-icon>redo</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let row">{{row.id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="productGroupName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Product group</th>
+        <td mat-cell *matCellDef="let row">{{row.productGroupName}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="productName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+        <td mat-cell *matCellDef="let row">{{row.productName}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+        <td mat-cell *matCellDef="let row">{{row.quantity}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+        <td mat-cell *matCellDef="let row">{{row.amount}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="vatAmount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>VAT amount</th>
+        <td mat-cell *matCellDef="let row">{{row.vatAmount}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="totalAmount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Amount</th>
+        <td mat-cell *matCellDef="let row">{{row.totalAmount}}</td>
+      </ng-container>
 
 
-  <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
-  </mat-paginator>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+    <content-loader *ngIf="isLoading$ | async">
+      <svg:rect x="5" y="5" rx="3" ry="3" width="97%" height="10" />
+      <svg:rect x="5" y="20" rx="3" ry="3" width="97%" height="10" />
+      <svg:rect x="5" y="35" rx="3" ry="3" width="97%" height="10" />
+      <svg:rect x="5" y="50" rx="3" ry="3" width="97%" height="10" />
+      <svg:rect x="5" y="65" rx="3" ry="3" width="97%" height="10" />
+      <svg:rect x="5" y="80" rx="3" ry="3" width="97%" height="10" />
+      <svg:rect x="5" y="95" rx="3" ry="3" width="97%" height="10" />
+      <svg:rect x="5" y="110" rx="3" ry="3" width="97%" height="10" />
+    </content-loader>
+
+    <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+    </mat-paginator>
+  </div>
 </div>

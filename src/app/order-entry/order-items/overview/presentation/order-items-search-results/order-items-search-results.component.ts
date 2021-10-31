@@ -1,16 +1,21 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
+  Output,
   ViewChild,
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { merge, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { IOrderItemsSearchResultsUI } from '../../facade/order-items-search-results-ui.model';
+import { IOrderItemsSearchResultsUI } from './order-items-search-results-ui.model';
+import { ID, EntityStateHistoryPlugin, isUndefined } from '@datorama/akita';
+import { OrderItemsQuery } from '../../../state/order-items.query';
 
 @Component({
   selector: 'app-order-items-search-results',
@@ -22,16 +27,19 @@ export class OrderItemsSearchResultsComponent
 {
   _searchResults: IOrderItemsSearchResultsUI[];
 
+  @Input() isLoading$;
+
   @Input() set searchResults(value: IOrderItemsSearchResultsUI[]) {
     this._searchResults = value;
     this.dataSource = new MatTableDataSource(this._searchResults);
     this.fetchPage();
   }
-
+  @Output() editItem = new EventEmitter<IOrderItemsSearchResultsUI>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<IOrderItemsSearchResultsUI>;
   dataSource: MatTableDataSource<IOrderItemsSearchResultsUI>;
+  stateHistoryEntity: EntityStateHistoryPlugin;
 
   displayedColumns = [
     'id',
@@ -42,15 +50,20 @@ export class OrderItemsSearchResultsComponent
     'vatAmount',
     'totalAmount',
     'actions',
+    'undo-redo',
   ];
 
   private unsubscribe$ = new Subject<void>();
+
+  constructor(private query: OrderItemsQuery) {}
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
   ngAfterViewInit(): void {
+    this.stateHistoryEntity = new EntityStateHistoryPlugin(this.query);
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
 
@@ -105,6 +118,14 @@ export class OrderItemsSearchResultsComponent
 
   // for test add one with name new
   onEdit = (row) => {
-    console.log('edit ', row);
+    this.editItem.emit(row);
   };
+
+  undo(id?) {
+    this.stateHistoryEntity.undo(id);
+  }
+
+  redo(id?) {
+    this.stateHistoryEntity.redo(id);
+  }
 }

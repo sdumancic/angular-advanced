@@ -1,42 +1,33 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { merge, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { IOrderItemsSearchResultsUI } from 'src/app/order-entry/order-items/overview/presentation/order-items-search-results/order-items-search-results-ui.model';
-import { OrderItemFormService } from '../../../../shared/form/order-item-form.service';
-import { CreateItemFacadeService } from '../../../facade/create-item-facade.service';
-
-export interface DialogData {
-  orderId: number;
-  orderItem?: IOrderItemsSearchResultsUI;
-}
+import { IOrderItemsSearchResultsUI } from '../../overview/presentation/order-items-search-results/order-items-search-results-ui.model';
+import { OrderItemFacadeService } from '../facade/order-item-facade.service';
+import { OrderItemFormService } from '../form/order-item-form.service';
 
 @Component({
-  selector: 'app-create-item-dialog',
-  templateUrl: './create-item-dialog.component.html',
-  styleUrls: ['./create-item-dialog.component.scss'],
-  providers: [OrderItemFormService, CreateItemFacadeService],
+  selector: 'app-order-item-detail',
+  templateUrl: './order-item-detail.component.html',
+  styleUrls: ['./order-item-detail.component.scss'],
+  providers: [OrderItemFormService, OrderItemFacadeService],
 })
-export class CreateItemDialogComponent implements OnInit, OnDestroy {
+export class OrderItemDetailComponent implements OnInit, OnDestroy {
+  @Input() orderId: number;
+  @Input() orderItem: IOrderItemsSearchResultsUI;
   form: FormGroup;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
-    public dialogRef: MatDialogRef<CreateItemDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private formService: OrderItemFormService,
-    public facade: CreateItemFacadeService
+    public facade: OrderItemFacadeService
   ) {}
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   ngOnInit(): void {
-    this.form = this.formService.buildForm(this.data.orderId);
-    this.form.patchValue({ quantity: 1 });
+    this.form = this.formService.buildForm(this.orderId, this.orderItem);
+    if (this.form.get('productGroup').value) {
+      this.facade.fetchProductsForGroup$(this.form.get('productGroup').value);
+    }
     merge(
       this.amountControl().valueChanges,
       this.quantityControl().valueChanges
@@ -50,14 +41,6 @@ export class CreateItemDialogComponent implements OnInit, OnDestroy {
           totalAmount: amount * quantity * 0.25 + amount * quantity,
         });
       });
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  postItem() {
-    this.dialogRef.close(this.form.getRawValue());
   }
 
   onProductGroupChanged(code) {
@@ -85,5 +68,10 @@ export class CreateItemDialogComponent implements OnInit, OnDestroy {
 
   quantityControl(): FormControl {
     return this.form.get('quantity') as FormControl;
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

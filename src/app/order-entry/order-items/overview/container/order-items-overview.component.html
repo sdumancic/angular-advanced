@@ -1,6 +1,40 @@
 <div class="container">
-  <button mat-stroked-button color="primary" (click)="onAddItem()" class='add-btn' [disabled]="!orderId">
-    <mat-icon matPrefix>add</mat-icon> Add item
-  </button>
-  <app-order-items-search-results [searchResults]="orderItemsSearchResults"></app-order-items-search-results>
+
+  <div class='table-toolbar'>
+    <button mat-stroked-button color="primary" (click)="onAddItem()" class='add-btn'
+      [disabled]="!orderId || (isLoading$ | async)">
+      <mat-icon matPrefix>add</mat-icon> Add item
+    </button>
+
+    <mat-form-field appearance="standard" class='filter-field'>
+      <mat-label>Filter</mat-label>
+      <input matInput type="search" [formControl]="filterControl">
+    </mat-form-field>
+
+    <div class="undo-redo-buttons">
+      <button mat-stroked-button [disabled]="!stateHistory.hasPast" (click)="undo()">
+        <ng-container *ngIf="stateHistory.hasPast">
+          <mat-icon [matBadge]="numPastActions()" matPrefix>undo</mat-icon>
+        </ng-container>
+        <ng-container *ngIf="!stateHistory.hasPast">
+          <mat-icon matPrefix>undo</mat-icon>
+        </ng-container>
+
+      </button>
+
+      <button mat-stroked-button [disabled]="!stateHistory.hasFuture" (click)="redo()">
+        <ng-container *ngIf="stateHistory.hasFuture">
+          <mat-icon [matBadge]="numFutureActions()" matPrefix>redo</mat-icon>
+        </ng-container>
+        <ng-container *ngIf="!stateHistory.hasFuture">
+          <mat-icon matPrefix>redo</mat-icon>
+        </ng-container>
+      </button>
+
+    </div>
+  </div>
+
+  <app-order-items-search-results [searchResults]="orderItemsSearchResults" [isLoading$]="isLoading$"
+    (editItem)="onEditItem($event)">
+  </app-order-items-search-results>
 </div>
