@@ -1,4 +1,5 @@
-<app-toolbar [orderId]="orderId" (orderNumberUpdated)='onOrderNumberUpdated($event)'></app-toolbar>
-<app-order-detail [order]="order"></app-order-detail>
-<app-order-items-overview [orderId]="orderId">
+<app-toolbar [orderId]="orderId" (revert)="onRevert()" (orderNumberUpdated)='onOrderNumberUpdated($event)'>
+</app-toolbar>
+<app-order-detail #orderDetail [orderId]="orderId"></app-order-detail>
+<app-order-items-overview #orderItems [orderId]="orderId">
 </app-order-items-overview>

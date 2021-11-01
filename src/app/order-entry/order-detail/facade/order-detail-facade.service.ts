@@ -1,37 +1,100 @@
+import { Injectable, OnDestroy } from '@angular/core';
+import { DirtyCheckPlugin } from '@datorama/akita';
+import { forkJoin, of, Subject, Subscription } from 'rxjs';
+import { delay, map, takeUntil } from 'rxjs/operators';
+import { OrderDetailsQuery } from '../state/order-details.query';
+import { OrderDetailsStore } from '../state/order-details.store';
 import { OrdersService } from './../../data-access/orders.service';
-import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { IOrderDetailUI } from './order-detail-ui.model';
+import { OrderDetailMapper } from './order-detail.mapper';
 
-@Injectable()
-export class OrderDetailFacadeService {
-  constructor(private orderService: OrdersService) {}
+@Injectable({ providedIn: 'any' })
+export class OrderDetailFacadeService implements OnDestroy {
+  private dirtyCheck: DirtyCheckPlugin;
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(
+    private ordersService: OrdersService,
+    private store: OrderDetailsStore,
+    private query: OrderDetailsQuery
+  ) {}
+
+  isDirty$() {
+    if (!this.dirtyCheck) {
+      return of(false);
+    }
+    return this.dirtyCheck?.isDirty$;
+  }
+
+  startLoading() {
+    this.store.setLoading(true);
+  }
+
+  finishLoading() {
+    this.store.setLoading(false);
+  }
+
+  setDirtyCheckHead() {
+    this.dirtyCheck = new DirtyCheckPlugin(this.query, {
+      watchProperty: 'orderDetails',
+    }).setHead();
+  }
+
+  init$(orderId: number) {
+    return forkJoin([
+      this.ordersService.fetchSalesPersons$(),
+      this.ordersService.fetchOrderStatuses$(),
+      this.ordersService.fetchOrderDetails$(orderId),
+    ]).pipe(
+      delay(500),
+      map(([salesPersons, orderStatuses, orderDetails]) => {
+        const orderDetailUI: IOrderDetailUI =
+          OrderDetailMapper.fromResourceToOrderDetailUI(orderDetails);
+        this.store.update({
+          orderDetails: orderDetailUI,
+          salesPersons: salesPersons,
+          orderStatuses: orderStatuses,
+        });
+        return orderDetailUI;
+      })
+    );
+  }
+
+  updateFormValue(orderDetail: IOrderDetailUI) {
+    this.store.update({ orderDetails: orderDetail });
+  }
+  reset() {
+    this.dirtyCheck.reset();
+    return this.query.getValue().orderDetails;
+  }
 
   salesPersons$() {
-    return this.orderService.fetchSalesPersons$();
+    return this.query.salesPersons$;
   }
 
   salesPerson$(id: string) {
-    return this.orderService.fetchSalesPersonById(id);
-  }
-
-  orderStatus$(id: string) {
-    return this.orderService.fetchOrderStatusById(id);
+    return this.query.salesPersons$.pipe(
+      map((persons) => persons.find((person) => person.id === id))
+    );
   }
 
   statuses$() {
-    return this.orderService.fetchOrderStatuses$();
+    return this.query.orderStatuses$;
   }
 
-  orderDetails$(orderId: number) {
-    return this.orderService.fetchOrderDetails$(orderId);
+  isLoading$() {
+    return this.query?.selectLoading();
   }
 
-  pizza$() {
-    return of([
-      { id: 'j8P9sz', name: 'Pepperoni', price: 899 },
-      { id: 'tMot06', name: 'Supreme', price: 999 },
-      { id: 'x9sD3g', name: 'Sizzler', price: 899 },
-    ]);
+  orderStatus$(code: string) {
+    return this.query.orderStatuses$.pipe(
+      map((statues) => statues.find((status) => status.code === code))
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.dirtyCheck.destroy();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

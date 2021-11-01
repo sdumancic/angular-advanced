@@ -1,5 +1,17 @@
-<div class="container" [formGroup]="form">
+<ng-container *ngIf='(isLoading$ | async)'>
+  <content-loader>
+    <svg:rect x="5" y="5" rx="3" ry="3" width="95%" height="20" />
+    <svg:rect x="5" y="35" rx="3" ry="3" width="95%" height="20" />
+    <svg:rect x="5" y="65" rx="3" ry="3" width="95%" height="20" />
+    <svg:rect x="5" y="95" rx="3" ry="3" width="95%" height="20" />
+
+  </content-loader>
+</ng-container>
+
+<div class="container" [formGroup]="form" *ngIf='!(isLoading$ | async)'>
+
   <div class="general-section">
+
     <mat-form-field appearance="outline">
       <mat-label>Sales Person</mat-label>
       <mat-select formControlName="salesPersonId" (selectionChange)="onSalesPersonChanged($event.value)">
@@ -31,7 +43,6 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-
   </div>
 
 

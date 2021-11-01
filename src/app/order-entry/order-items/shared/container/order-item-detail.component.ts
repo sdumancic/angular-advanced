@@ -25,8 +25,10 @@ export class OrderItemDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form = this.formService.buildForm(this.orderId, this.orderItem);
-    if (this.form.get('productGroup').value) {
-      this.facade.fetchProductsForGroup$(this.form.get('productGroup').value);
+    if (this.form.get('productGroupCode').value) {
+      this.facade.fetchProductsForGroup$(
+        this.form.get('productGroupCode').value
+      );
     }
     merge(
       this.amountControl().valueChanges,

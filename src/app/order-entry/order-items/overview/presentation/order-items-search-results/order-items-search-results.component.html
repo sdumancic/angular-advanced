@@ -71,7 +71,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
     </table>
-    <content-loader *ngIf="isLoading$ | async">
+
+    <content-loader *ngIf="!!(isLoading$ | async)">
       <svg:rect x="5" y="5" rx="3" ry="3" width="97%" height="10" />
       <svg:rect x="5" y="20" rx="3" ry="3" width="97%" height="10" />
       <svg:rect x="5" y="35" rx="3" ry="3" width="97%" height="10" />

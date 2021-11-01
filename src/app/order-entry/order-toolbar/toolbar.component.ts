@@ -1,4 +1,3 @@
-import { FormControl } from '@angular/forms';
 import {
   Component,
   EventEmitter,
@@ -7,14 +6,18 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { Observable, Subject } from 'rxjs';
+import { OrderDetailFacadeService } from '../order-detail/facade/order-detail-facade.service';
+import { OrderDetailsQuery } from '../order-detail/state/order-details.query';
+import { OrderItemsOverviewFacadeService } from '../order-items/overview/facade/order-items-overview-facade.service';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
 })
-export class ToolbarComponent implements OnInit, OnDestroy {
+export class ToolbarComponent implements OnDestroy {
   private _orderId: number;
   private unsubscribe$ = new Subject();
 
@@ -26,10 +29,18 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     }
   }
   @Output() orderNumberUpdated = new EventEmitter<string>();
+  @Output() revert = new EventEmitter<void>();
 
   control: FormControl = new FormControl(null);
 
-  ngOnInit(): void {}
+  constructor(
+    public orderDetailFacadeService: OrderDetailFacadeService,
+    public orderItemsFacade: OrderItemsOverviewFacadeService
+  ) {}
+
+  onRevert() {
+    this.revert.emit();
+  }
 
   clearSearch() {
     this.control.setValue(null);

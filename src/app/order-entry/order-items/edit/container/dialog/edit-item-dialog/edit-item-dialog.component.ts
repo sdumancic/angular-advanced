@@ -6,9 +6,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogData } from '../../create/container/dialog/create-item-dialog/create-item-dialog.component';
-import { IOrderItemsSearchResultsUI } from '../../overview/presentation/order-items-search-results/order-items-search-results-ui.model';
-import { OrderItemDetailComponent } from '../../shared/container/order-item-detail.component';
+import { DialogData } from 'src/app/order-entry/order-items/create/container/dialog/create-item-dialog/create-item-dialog.component';
+import { IOrderItemsSearchResultsUI } from 'src/app/order-entry/order-items/overview/presentation/order-items-search-results/order-items-search-results-ui.model';
+import { OrderItemDetailComponent } from 'src/app/order-entry/order-items/shared/container/order-item-detail.component';
 
 @Component({
   selector: 'app-edit-item-dialog',

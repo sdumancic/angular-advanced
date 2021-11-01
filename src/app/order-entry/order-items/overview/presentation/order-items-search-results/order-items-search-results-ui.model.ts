@@ -9,4 +9,5 @@ export interface IOrderItemsSearchResultsUI {
   amount: number;
   vatAmount: number;
   totalAmount: number;
+  status: 'original' | 'added' | 'updated' | 'deleted';
 }

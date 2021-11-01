@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <app-order-items-search-results [searchResults]="orderItemsSearchResults" [isLoading$]="isLoading$"
-    (editItem)="onEditItem($event)">
+  <app-order-items-search-results #searchResults [searchResults]="orderItemsSearchResults" [isLoading$]="isLoading$"
+    (editItem)="onEditItem($event)" (deleteItem)="onDeleteItem($event)">
   </app-order-items-search-results>
 </div>

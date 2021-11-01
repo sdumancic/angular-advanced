@@ -1,7 +1,7 @@
 <div [formGroup]="form" class="container">
   <mat-form-field appearance="outline">
     <mat-label>Product group</mat-label>
-    <mat-select formControlName="productGroup" (selectionChange)="onProductGroupChanged($event.value)">
+    <mat-select formControlName="productGroupCode" (selectionChange)="onProductGroupChanged($event.value)">
       <mat-option *ngFor="let productGroup of (facade.productGroups$() | async)" [value]="productGroup.code">
         {{productGroup.name}}
       </mat-option>
@@ -10,7 +10,7 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Product</mat-label>
-    <mat-select formControlName="product" (selectionChange)="onProductChanged($event.value)">
+    <mat-select formControlName="productCode" (selectionChange)="onProductChanged($event.value)">
       <mat-option *ngFor="let product of (facade.products$() | async)" [value]="product.code">
         {{product.name}}
       </mat-option>

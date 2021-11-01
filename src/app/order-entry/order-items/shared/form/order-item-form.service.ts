@@ -13,14 +13,14 @@ export class OrderItemFormService {
         disabled: true,
       }),
       orderId: new FormControl({ value: orderId, disabled: true }),
-      productGroup: new FormControl(
+      productGroupCode: new FormControl(
         orderItem ? orderItem.productGroupCode : null,
         Validators.compose([Validators.required])
       ),
       productGroupName: new FormControl(
         orderItem ? orderItem.productGroupName : null
       ),
-      product: new FormControl(
+      productCode: new FormControl(
         orderItem ? orderItem.productCode : null,
         Validators.compose([Validators.required])
       ),

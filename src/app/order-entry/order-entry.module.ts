@@ -14,14 +14,16 @@ import { OrderItemsOverviewComponent } from './order-items/overview/container/or
 import { CreateItemDialogComponent } from './order-items/create/container/dialog/create-item-dialog/create-item-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
-import { OrderDetailComponent } from './order-detail/order-detail.component';
 import { OrderEntryRoutingModule } from './order-entry-routing.module';
 import { ToolbarComponent } from './order-toolbar/toolbar.component';
 import { HomeFacadeService } from './home/facade/home-facade.service';
 import { HomeComponent } from './home/container/home.component';
 import { ContentLoaderModule } from '@ngneat/content-loader';
-import { EditItemDialogComponent } from './order-items/edit/container/edit-item-dialog.component';
 import { OrderItemDetailComponent } from './order-items/shared/container/order-item-detail.component';
+import { EditItemDialogComponent } from './order-items/edit/container/dialog/edit-item-dialog/edit-item-dialog.component';
+import { OrderDetailComponent } from './order-detail/container/order-detail.component';
+import { OrderDetailFacadeService } from './order-detail/facade/order-detail-facade.service';
+import { OrderItemsOverviewFacadeService } from './order-items/overview/facade/order-items-overview-facade.service';
 
 @NgModule({
   imports: [
@@ -49,6 +51,8 @@ import { OrderItemDetailComponent } from './order-items/shared/container/order-i
   ],
   providers: [
     HomeFacadeService,
+    OrderDetailFacadeService,
+    OrderItemsOverviewFacadeService,
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
   ],
   entryComponents: [CreateItemDialogComponent],

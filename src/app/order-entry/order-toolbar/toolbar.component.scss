@@ -1,9 +1,15 @@
 .container{
   display:flex;
+  align-items: center;
+  justify-content: space-between;
   margin:20px;
   .order-number-search-bar{
     min-width: 200px;
     width:20%
+  }
+
+  .ml-10px{
+    margin-left:10px
   }
 }
 

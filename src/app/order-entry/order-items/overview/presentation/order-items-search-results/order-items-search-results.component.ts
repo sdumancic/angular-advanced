@@ -35,6 +35,7 @@ export class OrderItemsSearchResultsComponent
     this.fetchPage();
   }
   @Output() editItem = new EventEmitter<IOrderItemsSearchResultsUI>();
+  @Output() deleteItem = new EventEmitter<IOrderItemsSearchResultsUI>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<IOrderItemsSearchResultsUI>;
@@ -110,13 +111,9 @@ export class OrderItemsSearchResultsComponent
   }
 
   onDel = (row) => {
-    this._searchResults = this._searchResults.filter(
-      (item) => item.id !== row.id
-    );
-    this.dataSource.data = this._searchResults;
+    this.deleteItem.emit(row);
   };
 
-  // for test add one with name new
   onEdit = (row) => {
     this.editItem.emit(row);
   };
@@ -127,5 +124,9 @@ export class OrderItemsSearchResultsComponent
 
   redo(id?) {
     this.stateHistoryEntity.redo(id);
+  }
+
+  reset() {
+    this.stateHistoryEntity.clear();
   }
 }

@@ -11,5 +11,15 @@
       <mat-hint>Enter 1, 2 or 3</mat-hint>
     </mat-form-field>
   </div>
-
+  <div>
+    <button mat-stroked-button color="primary"
+      [disabled]="!(orderDetailFacadeService.isDirty$()|async) && !(orderItemsFacade.isDirty$() | async)">
+      <mat-icon>save</mat-icon>Save
+    </button>
+    <button mat-stroked-button class="ml-10px"
+      [disabled]="!(orderDetailFacadeService.isDirty$()|async) && !(orderItemsFacade.isDirty$() | async)"
+      (click)="onRevert()">
+      <mat-icon>undo</mat-icon>Revert
+    </button>
+  </div>
 </div>

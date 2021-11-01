@@ -21,6 +21,7 @@ const initState = {
   products: [],
   active: null,
   filter: null,
+  loading: false,
 };
 
 @Injectable({ providedIn: 'root' })

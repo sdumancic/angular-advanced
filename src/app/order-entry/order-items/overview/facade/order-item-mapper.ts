@@ -17,6 +17,7 @@ export class OrderItemMapper {
         quantity: item.quantity,
         vatAmount: item.vatAmount,
         totalAmount: item.totalAmount,
+        status: 'original',
       };
     });
   }

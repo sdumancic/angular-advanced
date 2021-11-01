@@ -1,31 +1,43 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { debounceTime, take, takeUntil } from 'rxjs/operators';
+import { debounceTime, take, takeUntil, tap } from 'rxjs/operators';
 import { CreateItemDialogComponent } from '../../create/container/dialog/create-item-dialog/create-item-dialog.component';
 import { OrderItemsQuery } from '../../state/order-items.query';
 import { OrderItemsOverviewFacadeService } from '../facade/order-items-overview-facade.service';
 import { IOrderItemsSearchResultsUI } from '../presentation/order-items-search-results/order-items-search-results-ui.model';
 import { StateHistoryPlugin } from '@datorama/akita';
-import { EditItemDialogComponent } from '../../edit/container/edit-item-dialog.component';
+import { EditItemDialogComponent } from '../../edit/container/dialog/edit-item-dialog/edit-item-dialog.component';
+import { OrderItemsSearchResultsComponent } from '../presentation/order-items-search-results/order-items-search-results.component';
 
 @Component({
   selector: 'app-order-items-overview',
   templateUrl: './order-items-overview.component.html',
   styleUrls: ['./order-items-overview.component.scss'],
-  providers: [OrderItemsOverviewFacadeService],
 })
 export class OrderItemsOverviewComponent implements OnInit, OnDestroy {
   private _orderId: number;
-  isLoading$ = this.query.loading$;
+  isLoading$ = this.query.selectLoading();
   orderItemsSearchResults: IOrderItemsSearchResultsUI[];
+
+  @ViewChild('searchResults')
+  searchResultsComponent: OrderItemsSearchResultsComponent;
   @Input() set orderId(value: number) {
-    if (this.stateHistory) {
-      this.stateHistory.ignoreNext();
+    if (value) {
+      this.facade.startLoading();
+      if (this.stateHistory) {
+        this.stateHistory.ignoreNext();
+      }
+      this.facade
+        .init$(value)
+        .pipe(take(1))
+        .subscribe((orderItemsUi) => {
+          this.facade.finishLoading();
+          this.facade.setDirtyCheckHead();
+        });
+      this._orderId = value;
     }
-    this.facade.init(value);
-    this._orderId = value;
   }
 
   get orderId() {
@@ -45,6 +57,10 @@ export class OrderItemsOverviewComponent implements OnInit, OnDestroy {
     this.stateHistory = new StateHistoryPlugin(this.query, {
       watchProperty: 'entities',
     });
+  }
+
+  isDirty$() {
+    return this.facade.isDirty$();
   }
 
   ngOnInit() {
@@ -108,6 +124,10 @@ export class OrderItemsOverviewComponent implements OnInit, OnDestroy {
       });
   }
 
+  onDeleteItem(item: IOrderItemsSearchResultsUI) {
+    this.facade.deleteOrderItem(item);
+  }
+
   numPastActions() {
     return (this.stateHistory as any).history?.past?.length;
   }
@@ -127,5 +147,11 @@ export class OrderItemsOverviewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  reset() {
+    this.facade.reset();
+    this.stateHistory.clear();
+    this.searchResultsComponent.reset();
   }
 }

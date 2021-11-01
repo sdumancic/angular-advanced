@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, zip } from 'rxjs';
-import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { IOrderItem } from '../../data-access/order-items.model';
+import { Observable, of, Subject } from 'rxjs';
+import { map, take, takeUntil, tap } from 'rxjs/operators';
 import { IOrder } from '../../data-access/order.model';
+import { OrderDetailComponent } from '../../order-detail/container/order-detail.component';
+import { OrderItemsOverviewComponent } from '../../order-items/overview/container/order-items-overview.component';
 import { HomeFacadeService } from '../facade/home-facade.service';
 
 @Component({
@@ -17,10 +19,19 @@ export class HomeComponent implements OnInit {
   private unsubscribe$ = new Subject();
   private lastEmittedOrderId: number = null;
 
+  @ViewChild('orderDetail') orderDetailComponent: OrderDetailComponent;
+  @ViewChild('orderItems')
+  orderItemsOverviewComponent: OrderItemsOverviewComponent;
+
   constructor(
     private facade: HomeFacadeService,
     private route: ActivatedRoute
   ) {}
+
+  onRevert() {
+    this.orderDetailComponent.reset();
+    this.orderItemsOverviewComponent.reset();
+  }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
