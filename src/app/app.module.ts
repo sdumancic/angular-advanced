@@ -19,6 +19,8 @@ import { environment } from 'src/environments/environment';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
+import { OrderItemEffects } from './order-entry/order-items/state/order-items.effects';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -38,6 +40,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    AkitaNgEffectsModule.forRoot([OrderItemEffects]),
   ],
   bootstrap: [AppComponent],
   exports: [HomeComponent],

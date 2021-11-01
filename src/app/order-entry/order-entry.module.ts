@@ -24,6 +24,8 @@ import { EditItemDialogComponent } from './order-items/edit/container/dialog/edi
 import { OrderDetailComponent } from './order-detail/container/order-detail.component';
 import { OrderDetailFacadeService } from './order-detail/facade/order-detail-facade.service';
 import { OrderItemsOverviewFacadeService } from './order-items/overview/facade/order-items-overview-facade.service';
+import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
+import { OrderItemEffects } from './order-items/state/order-items.effects';
 
 @NgModule({
   imports: [

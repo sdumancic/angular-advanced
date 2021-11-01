@@ -30,6 +30,7 @@ export class ToolbarComponent implements OnDestroy {
   }
   @Output() orderNumberUpdated = new EventEmitter<string>();
   @Output() revert = new EventEmitter<void>();
+  @Output() save = new EventEmitter<void>();
 
   control: FormControl = new FormControl(null);
 
@@ -44,6 +45,10 @@ export class ToolbarComponent implements OnDestroy {
 
   clearSearch() {
     this.control.setValue(null);
+  }
+
+  onSave() {
+    this.save.emit();
   }
 
   emitOrderUpdate() {

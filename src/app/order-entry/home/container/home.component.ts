@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
 import { ActivatedRoute } from '@angular/router';
+import { Actions } from '@datorama/akita-ng-effects';
 import { Observable, of, Subject } from 'rxjs';
 import { map, take, takeUntil, tap } from 'rxjs/operators';
 import { IOrder } from '../../data-access/order.model';
 import { OrderDetailComponent } from '../../order-detail/container/order-detail.component';
 import { OrderItemsOverviewComponent } from '../../order-items/overview/container/order-items-overview.component';
+import { OrderItemActions } from '../../order-items/state/order-items.actions';
 import { HomeFacadeService } from '../facade/home-facade.service';
 
 @Component({
@@ -25,12 +27,43 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private facade: HomeFacadeService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private actions: Actions
   ) {}
 
   onRevert() {
     this.orderDetailComponent.reset();
     this.orderItemsOverviewComponent.reset();
+  }
+
+  onSave() {
+    this.facade
+      .save$()
+      .pipe(take(1))
+      .subscribe(([updated, deleted, added]) => {
+        this.orderDetailComponent.reset();
+        this.orderItemsOverviewComponent.reset();
+
+        added.forEach((orderItem) => {
+          this.actions.dispatch(OrderItemActions.addOrderItem({ orderItem }));
+        });
+
+        updated.forEach((orderItem) => {
+          console.log(orderItem);
+          this.actions.dispatch(
+            OrderItemActions.updateOrderItem({ orderItem })
+          );
+        });
+
+        deleted.forEach((orderItem) => {
+          this.actions.dispatch(
+            OrderItemActions.deleteOrderItem({
+              id: orderItem.id,
+              orderId: orderItem.orderId,
+            })
+          );
+        });
+      });
   }
 
   ngOnDestroy(): void {

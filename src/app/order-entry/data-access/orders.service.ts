@@ -82,9 +82,30 @@ export class OrdersService {
     return of(this.orderStatus.find((i) => i.code === id));
   }
 
-  public addOrderItem$(item: IOrderItem): Observable<IOrderItem> {
-    item.id = Math.random();
+  public addOrderItem(item: IOrderItem) {
     this.items.push(item);
-    return of(item);
+    console.log('inserting item');
+    return item;
+  }
+
+  public updateOrderItem(data: IOrderItem) {
+    const ind = this.items.findIndex((item: IOrderItem) => item.id === data.id);
+    if (ind > -1) {
+      this.items[ind] = data;
+      console.log('updating item ', data.id);
+    }
+    return data;
+  }
+
+  public deleteOrderItem(id: number) {
+    const ind = this.items.findIndex((item: IOrderItem) => item.id === id);
+    if (ind > -1) {
+      this.items.splice(ind, 1);
+    }
+    console.log('deleting item with id ', id);
+  }
+
+  public updateTotals(orderId: number) {
+    console.log('updating totals for order ', orderId);
   }
 }
