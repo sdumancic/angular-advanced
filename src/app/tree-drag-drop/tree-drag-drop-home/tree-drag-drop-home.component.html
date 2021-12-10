@@ -1,0 +1,49 @@
+<div class="grid-container">
+  <div class="div1">
+    <tree-root [nodes]="nodes" [focused]="true" [options]="optionsSource">
+      <ng-template #treeNodeTemplate let-node let-index="index">
+
+        <div [id]="'source:' + node.data.id" class="tree-item">
+          <span>{{ node.data.name }}[{{ node.data.id }}]</span>
+          <button (click)="addNode($event)">Add</button>
+        </div>
+
+      </ng-template>
+    </tree-root>
+  </div>
+  <div class="div3">
+    <button (click)="addNode()"> Add node</button>
+    <tree-root [nodes]="nodes2" [options]="optionsTarget" #targetTree (updateData)="onUpdateData($event)">
+      <ng-template #treeNodeTemplate let-node let-index="index">
+
+        <div [id]="'target:' + node.data.id" class="tree-item">
+          <span class="material-icons">
+            drag_indicator
+          </span>
+          <mat-form-field appearance="outline" class="my-custom-component-small attribute-name">
+            <input matInput [value]="node.data.name">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="my-custom-component-small attribute-type">
+            <mat-label>Type...</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let nodeType of nodeTypes" [value]="nodeType.value">
+                {{nodeType.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button disableRipple>
+            <mat-icon (click)="deleteNode(node)">delete</mat-icon>
+          </button>
+        </div>
+
+      </ng-template>
+    </tree-root>
+  </div>
+</div>
+
+
+<pre>
+  <code>
+  {{generatedMappingJson}}
+</code>
+</pre>

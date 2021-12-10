@@ -21,12 +21,15 @@
     "@angular/platform-browser": "~11.0.5",
     "@angular/platform-browser-dynamic": "~11.0.5",
     "@angular/router": "~11.0.5",
+    "@circlon/angular-tree-component": "^11.0.4",
     "@datorama/akita": "^6.2.3",
     "@datorama/akita-ng-effects": "^1.0.5",
     "@datorama/akita-ngdevtools": "^6.0.1",
     "@ngneat/content-loader": "^6.1.0",
+    "leader-line": "^1.0.7",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "uuid": "^8.3.2",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -36,6 +39,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "hello-world-schematics": "file:../hello-world-schematics",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.1.0",

@@ -45,6 +45,13 @@ const routes: Routes = [
         (m) => m.ChangeDetectionModule
       ),
   },
+  {
+    path: 'tree-drag-drop',
+    loadChildren: () =>
+      import('./tree-drag-drop/tree-drag-drop.module').then(
+        (m) => m.TreeDragDropModule
+      ),
+  },
 ];
 
 @NgModule({
