@@ -12,38 +12,75 @@
     </tree-root>
   </div>
   <div class="div3">
-    <button (click)="addNode()"> Add node</button>
-    <tree-root [nodes]="nodes2" [options]="optionsTarget" #targetTree (updateData)="onUpdateData($event)">
-      <ng-template #treeNodeTemplate let-node let-index="index">
+    <div class='tree-container'>
+      <mat-toolbar>
 
-        <div [id]="'target:' + node.data.id" class="tree-item">
-          <span class="material-icons">
-            drag_indicator
-          </span>
-          <mat-form-field appearance="outline" class="my-custom-component-small attribute-name">
-            <input matInput [value]="node.data.name">
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="my-custom-component-small attribute-type">
-            <mat-label>Type...</mat-label>
-            <mat-select>
-              <mat-option *ngFor="let nodeType of nodeTypes" [value]="nodeType.value">
-                {{nodeType.viewValue}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button mat-icon-button disableRipple>
-            <mat-icon (click)="deleteNode(node)">delete</mat-icon>
+        <mat-form-field appearance="outline" class="my-custom-component-small">
+
+          <input matInput type=" text" id="filter" #filter (keyup)="targetTree.treeModel.filterNodes(filter.value)"
+            placeholder="Filter nodes...">
+          <button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
+            <mat-icon>close</mat-icon>
           </button>
-        </div>
+        </mat-form-field>
 
-      </ng-template>
-    </tree-root>
+
+
+        <span class="example-spacer"></span>
+        <button mat-icon-button (click)="generateJson()">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button mat-icon-button (click)="targetTree.treeModel.expandAll()">
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <button mat-icon-button (click)="targetTree.treeModel.collapseAll()">
+          <mat-icon>expand_less</mat-icon>
+        </button>
+        <button mat-icon-button (click)="addNode()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button (click)="emptyTree()" color="warn">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </mat-toolbar>
+
+
+      <tree-root [nodes]="nodes2" [options]="optionsTarget" #targetTree (updateData)="onUpdateData($event)">
+        <ng-template #treeNodeTemplate let-node let-index="index">
+
+          <div [id]="'target:' + node.data.id" class="tree-item">
+            <span class="material-icons">
+              drag_indicator
+            </span>
+            <mat-form-field appearance="outline" class="my-custom-component-small attribute-name">
+              <input matInput [(ngModel)]="node.data.name">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="my-custom-component-small attribute-type">
+              <mat-select [(ngModel)]="node.data.type" placeholder="Select type...">
+                <mat-option *ngFor="let nodeType of nodeTypes" [value]="nodeType.value">
+                  {{nodeType.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-icon-button disableRipple>
+              <mat-icon (click)="addChildNode(node)">add_box</mat-icon>
+            </button>
+            <button mat-icon-button disableRipple>
+              <mat-icon (click)="deleteNode(node)">remove_circle</mat-icon>
+            </button>
+          </div>
+
+        </ng-template>
+      </tree-root>
+    </div>
+
+
   </div>
 </div>
 
 
 <pre>
   <code>
-  {{generatedMappingJson}}
+  {{nodes2 | json}}
 </code>
 </pre>
