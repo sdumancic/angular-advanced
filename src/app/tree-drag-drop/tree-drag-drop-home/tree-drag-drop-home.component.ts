@@ -1,3 +1,5 @@
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 import {
   AfterViewInit,
   Component,
@@ -13,7 +15,10 @@ import {
   TreeNode,
   TREE_ACTIONS,
 } from '@circlon/angular-tree-component';
+import { take } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+import { MappingOverlayComponent } from '../mapping-component/mapping-overlay.component';
+import { nodeTypes, nodes } from './data';
 
 function copyObjectAndUpdateId(aObject) {
   if (!aObject) {
@@ -46,151 +51,12 @@ export class TreeDragDropHomeComponent implements OnInit, AfterViewInit {
   @ViewChild('targetTree') targetTree: TreeComponent;
   @ViewChild('filter', { static: true }) filterElementRef: ElementRef;
 
+  nodeTypes = nodeTypes;
   generatedMappingJson: string;
-  nodeTypes = [
-    { value: 'object', viewValue: 'Object' },
-    { value: 'technical-attributes', viewValue: 'Technical Attributes' },
-    { value: 'string', viewValue: 'String' },
-    { value: 'number', viewValue: 'Number' },
-    { value: 'date', viewValue: 'Date' },
-  ];
+
+  nodes: any[];
   nodes2: any[];
-  nodes = [
-    {
-      id: 'orders.id',
-      key: 'orders.id',
-      name: 'id',
-      type: 'number',
-      _dragAction: 'clone',
-    },
-    {
-      id: 'orders.orderDate',
-      key: 'orders.orderDate',
-      name: 'orderDate',
-      type: 'date',
-      _dragAction: 'clone',
-    },
-    {
-      id: 'orders.processDate',
-      key: 'orders.processDate',
-      name: 'processDate',
-      type: 'date',
-      _dragAction: 'clone',
-    },
-    {
-      id: 'orders.orderStatus',
-      key: 'orders.orderStatus',
-      name: 'orderStatus',
-      _dragAction: 'clone',
-      type: 'object',
-      children: [
-        {
-          id: 'orders.orderStatus.code',
-          key: 'orders.orderStatus.code',
-          name: 'code',
-          type: 'string',
-          _dragAction: 'clone',
-        },
-        {
-          id: 'orders.orderStatus.value',
-          key: 'orders.orderStatus.value',
-          name: 'value',
-          type: 'string',
-          _dragAction: 'clone',
-        },
-      ],
-    },
-    {
-      id: 'orders.customer',
-      key: 'orders.customer',
-      name: 'customer',
-      type: 'object',
-      _dragAction: 'clone',
-      children: [
-        {
-          id: 'orders.customer.id',
-          key: 'orders.customer.id',
-          name: 'id',
-          type: 'number',
-          _dragAction: 'clone',
-        },
-        {
-          id: 'orders.customer.name',
-          key: 'orders.customer.name',
-          name: 'name',
-          type: 'string',
-          _dragAction: 'clone',
-        },
-        {
-          id: 'orders.customer.address',
-          key: 'orders.customer.address',
-          name: 'address',
-          type: 'string',
-          _dragAction: 'clone',
-        },
-        {
-          id: 'orders.customer.city',
-          key: 'orders.customer.city',
-          name: 'city',
-          type: 'string',
-          _dragAction: 'clone',
-        },
-        {
-          id: 'orders.customer.phones',
-          key: 'orders.customer.phones',
-          name: 'phones',
-          type: 'array',
-          _dragAction: 'clone',
-          children: [
-            {
-              id: 'orders.customer.phones.value',
-              key: 'orders.customer.phones.value',
-              name: 'value',
-              type: 'string',
-              _dragAction: 'clone',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'orders.items',
-      key: 'orders.items',
-      name: 'items',
-      type: 'object',
-      _dragAction: 'clone',
-      children: [
-        {
-          id: 'orders.items.id',
-          key: 'orders.items.id',
-          name: 'id',
-          type: 'number',
-          _dragAction: 'clone',
-        },
-        {
-          id: 'orders.items.price',
-          key: 'orders.items.price',
-          name: 'price',
-          type: 'number',
-          _dragAction: 'clone',
-        },
-        {
-          id: 'orders.items.name',
-          key: 'orders.items.name',
-          name: 'name',
-          type: 'string',
-          _dragAction: 'clone',
-        },
-      ],
-    },
-    {
-      id: 'orders.orderTotal',
-      key: 'orders.orderTotal',
-      name: 'orderTotal',
-      type: 'number',
-      _dragAction: 'clone',
-    },
-  ];
+
   optionsSource = {
     allowDrag: true,
     allowDrop: true,
@@ -225,13 +91,14 @@ export class TreeDragDropHomeComponent implements OnInit, AfterViewInit {
     },
   };
 
-  constructor() {}
+  constructor(private overlay: Overlay) {}
 
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     this.nodes2 = [];
-    this.nodes.forEach((node) => {
+    this.nodes = nodes;
+    nodes.forEach((node) => {
       const newNode = copyObjectAndUpdateId(node);
       this.nodes2.push(newNode);
     });
@@ -365,5 +232,89 @@ export class TreeDragDropHomeComponent implements OnInit, AfterViewInit {
     this.filterElementRef.nativeElement.value = '';
   }
 
-  generateJson() {}
+  generateJson() {
+    const results = ['{'];
+    const firstLevelElementsCount = this.nodes2.length;
+    let firstLevelCounter = 0;
+    for (let ind in this.nodes2) {
+      const rec = this.nodes2[ind];
+      firstLevelCounter++;
+      const attribute = this.generateAttributeForElement(
+        rec.id,
+        rec.type,
+        rec.name,
+        results,
+        firstLevelCounter === firstLevelElementsCount
+      );
+    }
+    results.push('}');
+    console.log(results.join('\r\n'));
+  }
+
+  generateAttributeForElement(
+    id: string,
+    type: string,
+    name: string,
+    results: string[],
+    lastElementInList: boolean
+  ) {
+    const node = this.targetTree?.treeModel?.getNodeById(id);
+    let result;
+    if (node?.hasChildren) {
+      result = '"' + name + '"' + ' : {';
+      results.push(result);
+      let counter = 0;
+      for (let ind2 in node.data.children) {
+        const childrenCount = node.data.children.length;
+        const childNode = node.data.children[ind2];
+        counter++;
+        this.generateAttributeForElement(
+          childNode.id,
+          childNode.type,
+          childNode.name,
+          results,
+          counter === childrenCount
+        );
+      }
+      lastElementInList ? results.push('}') : results.push('},');
+    } else {
+      const val = lastElementInList
+        ? '"' + name + '"' + ' : ' + '"' + type + '"'
+        : '"' + name + '"' + ' : ' + '"' + type + '"' + ',';
+      results.push(val);
+    }
+  }
+
+  editMapping(node: TreeNode, event) {
+    const overlayRef = this.overlay.create({
+      hasBackdrop: true,
+      height: '100px',
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      panelClass: 'mat-elevation-z8',
+      positionStrategy: this.overlay
+        .position()
+        .flexibleConnectedTo(event.path[0])
+        .withPositions([
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+        ]),
+    });
+    const component = new ComponentPortal(MappingOverlayComponent);
+
+    const componentRef = overlayRef.attach(component);
+    componentRef.instance.value = node.data.name;
+    componentRef.instance.valueChanged.pipe(take(1)).subscribe((val) => {
+      node.data.name = val;
+      overlayRef.detach();
+    });
+    componentRef.instance.close
+      .pipe(take(1))
+      .subscribe(() => overlayRef.detach());
+
+    overlayRef.backdropClick().subscribe(() => overlayRef.detach());
+  }
 }

@@ -62,10 +62,16 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <button mat-icon-button disableRipple>
+
+            <button mat-icon-button disableRipple [disabled]="!node.isLeaf" (click)="editMapping(node, $event)">
+              <mat-icon>swap_horiz</mat-icon>
+            </button>
+
+
+            <button mat-icon-button disableRipple color="primary">
               <mat-icon (click)="addChildNode(node)">add_box</mat-icon>
             </button>
-            <button mat-icon-button disableRipple>
+            <button mat-icon-button disableRipple color="warn">
               <mat-icon (click)="deleteNode(node)">remove_circle</mat-icon>
             </button>
           </div>
@@ -77,10 +83,3 @@
 
   </div>
 </div>
-
-
-<pre>
-  <code>
-  {{nodes2 | json}}
-</code>
-</pre>

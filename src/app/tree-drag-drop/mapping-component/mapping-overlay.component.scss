@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+::ng-deep .mat-elevation-z8 {
+  //border-top: 5px solid transparent;
+  //border-left: 5px solid transparent;
+  //border-right: 5px solid transparent;
+  //border-bottom: 5px solid transparent;
+  background-color: white !important;
+}
+
+textarea {
+  resize: none;
+  border-radius: 2px;
+}
+.textarea {
+  width: 100%;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-top: -10px;
+}

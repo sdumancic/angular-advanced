@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="textarea">
+    <textarea type="text" rows="4" placeholder="Edit mapping" [(ngModel)]="value"></textarea>
+  </div>
+  <div class="buttons">
+    <button mat-icon-button color="primary" (click)="onOk()" matTooltip="Apply changes">
+      <mat-icon>done</mat-icon>
+    </button>
+    <button mat-icon-button matTooltip="Close mapping screen" (click)="onClose()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="onClear()" matTooltip="Clears the mapping">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </div>
+</div>
