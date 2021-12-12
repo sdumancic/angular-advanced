@@ -32,7 +32,7 @@ function copyObjectAndUpdateId(aObject) {
     if (k === 'id') {
       v = uuidv4();
     }
-    if (k === '_dragActionClone') {
+    if (k === '_dragAction') {
       v = 'move';
     }
 
