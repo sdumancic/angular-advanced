@@ -74,16 +74,27 @@
 
 <br>
 <ng-container [formGroup]="form">
-  <app-search-form-field-container formControlName="first" type="text"></app-search-form-field-container>
-  <app-search-form-field-container formControlName="second" type="number"></app-search-form-field-container>
-  <app-search-form-field-buttons-container formControlName="third" type="text">
-  </app-search-form-field-buttons-container>
-  <app-search-form-field-buttons-container formControlName="fourth" type="number">
-  </app-search-form-field-buttons-container>
-  <mat-form-field appearance="outline">
-    <mat-label>Outline form field</mat-label>
-    <input matInput placeholder="Placeholder">
-    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-    <mat-hint>Hint</mat-hint>
-  </mat-form-field>
+  <div class="container">
+    <div class="first-column">
+      <app-search-form-field-container formControlName="first" type="text"></app-search-form-field-container>
+      <app-search-form-field-container formControlName="second" type="number"></app-search-form-field-container>
+      <app-search-form-field-buttons-container formControlName="third" type="text">
+      </app-search-form-field-buttons-container>
+      <app-search-form-field-buttons-container formControlName="fourth" type="number">
+      </app-search-form-field-buttons-container>
+      <mat-form-field appearance="outline">
+        <mat-label>Outline form field</mat-label>
+        <input matInput placeholder="Placeholder">
+        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-hint>Hint</mat-hint>
+      </mat-form-field>
+    </div>
+    <div class="second-column">
+      <div style="width:300px">
+        <app-simple-address-control formControlName="address" [readonly]="false" [streetValidators]="streetValidators"
+          [cityValidators]="cityValidators" [countryValidators]="countryValidators">
+        </app-simple-address-control>
+      </div>
+    </div>
+  </div>
 </ng-container>

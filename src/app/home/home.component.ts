@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { IGlobalState } from '../global-state.model';
 import { PoolingService } from '../pooling/pooling.service';
 import { StateService } from '../state.service';
@@ -11,6 +16,10 @@ import { StateService } from '../state.service';
 })
 export class HomeComponent implements OnInit {
   form: FormGroup;
+
+  streetValidators = [Validators.required, Validators.minLength(5)];
+  cityValidators = [Validators.required, Validators.minLength(5)];
+  countryValidators = [Validators.required];
 
   constructor(
     public poolingService: PoolingService,
@@ -29,6 +38,7 @@ export class HomeComponent implements OnInit {
       second: new FormControl(),
       third: new FormControl(),
       fourth: new FormControl(''),
+      address: new FormControl('', [Validators.required]),
     });
   }
 }

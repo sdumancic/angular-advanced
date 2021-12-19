@@ -21,6 +21,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
 import { OrderItemEffects } from './order-entry/order-items/state/order-items.effects';
+import { SimpleAddressControlComponent } from './simple-address-control/container/simple-address-control.component';
+import { SimpleAddressModuleModule } from './simple-address-control/simple-address-module.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -41,6 +43,7 @@ import { OrderItemEffects } from './order-entry/order-items/state/order-items.ef
     MatPaginatorModule,
     MatSortModule,
     AkitaNgEffectsModule.forRoot([OrderItemEffects]),
+    SimpleAddressModuleModule,
   ],
   bootstrap: [AppComponent],
   exports: [HomeComponent],

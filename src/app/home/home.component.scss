@@ -1,3 +1,17 @@
 :host {
   display: block;
 }
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+
+  .first-column {
+    width: 400px;
+    margin-right: 30px;
+  }
+
+  .second-column {
+    width: 400px;
+  }
+}
