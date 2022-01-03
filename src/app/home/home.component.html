@@ -94,6 +94,11 @@
         <app-simple-address-control formControlName="address" [readonly]="false" [streetValidators]="streetValidators"
           [cityValidators]="cityValidators" [countryValidators]="countryValidators">
         </app-simple-address-control>
+        {{form.get('address').errors | json}}
+        <div *ngIf="form.get('address').hasError('cityRequired')">
+          CITY REQUIRED
+        </div>
+
       </div>
     </div>
   </div>

@@ -28,7 +28,7 @@
     </ng-container>
     <mat-form-field appearance="standard">
       <mat-label>Country</mat-label>
-      <mat-select formControlName="country" (selectionChange)='onCountryChanged()'>
+      <mat-select formControlName="country" (selectionChange)='onCountryChanged()' (closed)="onClosed()">
         <mat-option *ngFor="let country of countries$ | async" [value]='country.id'> {{country.name}}</mat-option>
       </mat-select>
     </mat-form-field>

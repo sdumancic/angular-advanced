@@ -9,12 +9,17 @@ import {
 import {
   AbstractControl,
   ControlValueAccessor,
+  FormControl,
   FormGroup,
+  FormGroupDirective,
   NgControl,
+  NgForm,
+  NG_VALIDATORS,
   ValidationErrors,
   Validator,
   ValidatorFn,
 } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { Observable } from 'rxjs';
 import { ICountry, IState } from '../data-access/Country.model';
 import { SimpleAddressFacadeService } from '../facade/simple-address-facade.service';
@@ -27,7 +32,7 @@ import { SimpleAddressFormService } from '../form/simple-address-form.service';
   providers: [SimpleAddressFacadeService, SimpleAddressFormService],
 })
 export class SimpleAddressControlComponent
-  implements OnInit, ControlValueAccessor, Validator, DoCheck
+  implements OnInit, ControlValueAccessor, Validator
 {
   @Input() readonly = false;
   @Input() streetValidators: ValidatorFn | ValidatorFn[];
@@ -39,6 +44,7 @@ export class SimpleAddressControlComponent
   states$: Observable<IState[]>;
 
   errors: ValidationErrors;
+
   constructor(
     @Self() @Optional() private controlDirective: NgControl,
     private facade: SimpleAddressFacadeService
@@ -59,6 +65,8 @@ export class SimpleAddressControlComponent
 
   public onTouched: () => void = () => {};
 
+  onValidatorChange = () => {};
+
   writeValue(val: any): void {
     val && this.addressForm.setValue(val, { emitEvent: false });
   }
@@ -72,49 +80,32 @@ export class SimpleAddressControlComponent
     isDisabled ? this.addressForm.disable() : this.addressForm.enable();
   }
 
-  ngDoCheck(): void {
-    if (this.controlDirective.touched) {
-      this.addressForm.markAsTouched();
-    }
+  registerOnValidatorChange(fn: () => void): void {
+    this.onValidatorChange = fn;
   }
 
   validate(c: AbstractControl): ValidationErrors | null {
+    let errors: any = {};
+
+    console.log('validate ', this.addressForm.controls['street'].errors);
+
     if (this.addressForm.controls['street'].hasError('required')) {
-      this.addressForm.setErrors({
-        ...this.addressForm.errors,
-        streetRequired: true,
-      });
+      errors.streetRequired = true;
     }
     if (this.addressForm.controls['city'].hasError('required')) {
-      this.addressForm.setErrors({
-        ...this.addressForm.errors,
-        cityRequired: true,
-      });
+      errors.cityRequired = true;
     }
     if (this.addressForm.controls['country'].hasError('required')) {
-      this.addressForm.setErrors({
-        ...this.addressForm.errors,
-        countryRequired: true,
-      });
+      errors.countryRequired = true;
     }
     if (this.addressForm.controls['street'].hasError('minlength')) {
-      this.addressForm.setErrors({
-        ...this.addressForm.errors,
-        streetMinlength: true,
-      });
+      errors.streetMinlength = true;
     }
     if (this.addressForm.controls['city'].hasError('minlength')) {
-      this.addressForm.setErrors({
-        ...this.addressForm.errors,
-        cityMinlength: true,
-      });
+      errors.cityMinlength = true;
     }
-
-    return this.addressForm.valid
-      ? null
-      : {
-          invalidForm: { valid: false, message: 'Address fields are invalid' },
-        };
+    console.log('validate ', errors);
+    return errors;
   }
 
   public get invalid(): boolean {
@@ -143,19 +134,37 @@ export class SimpleAddressControlComponent
   }
 
   onStreetInputBlur(): void {
+    this.onTouched();
+    this.onValidatorChange();
     this.addressForm.get('street').updateValueAndValidity();
   }
 
   onCityInputBlur(): void {
+    this.onTouched();
+    this.onValidatorChange();
     this.addressForm.get('city').updateValueAndValidity();
+  }
+
+  onClosed() {
+    this.onTouched();
+    this.onValidatorChange();
+    this.addressForm.get('street').markAsTouched();
+    this.addressForm.get('city').markAsTouched();
+    this.addressForm.get('country').updateValueAndValidity();
   }
 
   isControlInvalid() {
     if (!this.controlDirective) {
       return false;
     }
-
-    if (!this.addressForm.valid && this.addressForm.touched) {
+    if (
+      (!this.addressForm.get('street').valid &&
+        this.addressForm.get('street').touched) ||
+      (!this.addressForm.get('city').valid &&
+        this.addressForm.get('city').touched) ||
+      (!this.addressForm.get('country').valid &&
+        this.addressForm.get('country').touched)
+    ) {
       return true;
     } else {
       return false;

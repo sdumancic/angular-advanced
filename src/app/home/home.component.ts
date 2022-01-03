@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
       second: new FormControl(),
       third: new FormControl(),
       fourth: new FormControl(''),
-      address: new FormControl('', [Validators.required]),
+      address: new FormControl(''),
     });
   }
 }
