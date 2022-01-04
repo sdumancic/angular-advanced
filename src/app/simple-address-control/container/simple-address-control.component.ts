@@ -1,7 +1,7 @@
 import {
   Component,
-  DoCheck,
   Input,
+  OnDestroy,
   OnInit,
   Optional,
   Self,
@@ -9,18 +9,13 @@ import {
 import {
   AbstractControl,
   ControlValueAccessor,
-  FormControl,
   FormGroup,
-  FormGroupDirective,
   NgControl,
-  NgForm,
-  NG_VALIDATORS,
   ValidationErrors,
   Validator,
   ValidatorFn,
 } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ICountry, IState } from '../data-access/Country.model';
 import { SimpleAddressFacadeService } from '../facade/simple-address-facade.service';
 import { SimpleAddressFormService } from '../form/simple-address-form.service';
@@ -32,7 +27,7 @@ import { SimpleAddressFormService } from '../form/simple-address-form.service';
   providers: [SimpleAddressFacadeService, SimpleAddressFormService],
 })
 export class SimpleAddressControlComponent
-  implements OnInit, ControlValueAccessor, Validator
+  implements OnInit, ControlValueAccessor, Validator, OnDestroy
 {
   @Input() readonly = false;
   @Input() streetValidators: ValidatorFn | ValidatorFn[];
@@ -43,6 +38,8 @@ export class SimpleAddressControlComponent
   countries$: Observable<ICountry[]> = this.facade.countries$;
   states$: Observable<IState[]>;
 
+  onChangeSub: Subscription;
+
   errors: ValidationErrors;
 
   constructor(
@@ -51,6 +48,10 @@ export class SimpleAddressControlComponent
   ) {
     controlDirective && (controlDirective.valueAccessor = this);
     this.addressForm = this.facade.createAddressForm();
+  }
+
+  ngOnDestroy(): void {
+    this.onChangeSub.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -71,7 +72,9 @@ export class SimpleAddressControlComponent
     val && this.addressForm.setValue(val, { emitEvent: false });
   }
   registerOnChange(fn: any): void {
-    this.addressForm.valueChanges.subscribe(fn);
+    this.onChangeSub = this.addressForm.valueChanges.subscribe((val) =>
+      fn(val)
+    );
   }
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
@@ -135,19 +138,16 @@ export class SimpleAddressControlComponent
 
   onStreetInputBlur(): void {
     this.onTouched();
-    this.onValidatorChange();
     this.addressForm.get('street').updateValueAndValidity();
   }
 
   onCityInputBlur(): void {
     this.onTouched();
-    this.onValidatorChange();
     this.addressForm.get('city').updateValueAndValidity();
   }
 
   onClosed() {
     this.onTouched();
-    this.onValidatorChange();
     this.addressForm.get('street').markAsTouched();
     this.addressForm.get('city').markAsTouched();
     this.addressForm.get('country').updateValueAndValidity();
