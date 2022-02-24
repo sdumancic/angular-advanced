@@ -19,6 +19,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatCheckboxModule} from '@angular/material/checkbox';
 
 const materialModules = [
   MatIconModule,
@@ -40,6 +41,7 @@ const materialModules = [
   MatNativeDateModule,
   MatDialogModule,
   MatBadgeModule,
+  MatCheckboxModule
 ];
 
 @NgModule({

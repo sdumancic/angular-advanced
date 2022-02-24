@@ -1,0 +1,109 @@
+<div class="container">
+
+  <div class="year-slot" [ngStyle]="{'order':yearOrder}" *ngIf="yearVisible">
+    <mat-form-field appearance="outline">
+      <mat-label>Year</mat-label>
+      <mat-select >
+        <mat-option value="2022">2022</mat-option>
+        <mat-option value="2021">2021</mat-option>
+        <mat-option value="2020">2020</mat-option>
+        <mat-option value="2019">2019</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+
+
+  <div class="fuel-slot"  [ngStyle]="{'order':fuelOrder}" *ngIf="fuelVisible">
+    <mat-form-field appearance="outline">
+      <mat-label>Fuel</mat-label>
+      <mat-select >
+        <mat-option value="Petrol">Petrol</mat-option>
+        <mat-option value="Diesel">Diesel</mat-option>
+        <mat-option value="Hybrid">Hybrid</mat-option>
+        <mat-option value="Electric">Electric</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="color-slot"  [ngStyle]="{'order':colorOrder}" *ngIf="colorVisible">
+    <mat-form-field appearance="outline">
+      <mat-label>Color</mat-label>
+      <mat-select >
+        <mat-option value="White">White</mat-option>
+        <mat-option value="Black">Black</mat-option>
+        <mat-option value="Blue">Blue</mat-option>
+        <mat-option value="Red">Red</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="gear-slot"  [ngStyle]="{'order':gearOrder}" *ngIf="gearVisible">
+    <mat-form-field appearance="outline">
+      <mat-label>Gear</mat-label>
+      <mat-select >
+        <mat-option value="Manual">Manual</mat-option>
+        <mat-option value="Automatic">Automatic</mat-option>
+
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="engine-slot" [ngStyle]="{'order':engineOrder}" *ngIf="engineVisible">
+
+    <mat-form-field appearance="outline"  >
+      <mat-label>Engine</mat-label>
+      <mat-select >
+        <mat-option value="1200">1200</mat-option>
+        <mat-option value="1.5 TDCI">1.5 TDCI</mat-option>
+
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+
+</div>
+
+<div class="config-container">
+
+  <div >
+    <mat-form-field appearance="outline" style="width:75px" >
+      <mat-label>Year</mat-label>
+      <input matInput type="number" placeholder="Year" [(ngModel)]="yearOrder">
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="yearVisible"></mat-checkbox>
+  </div>
+
+  <div>
+    <mat-form-field appearance="outline" style="width:75px">
+      <mat-label>Fuel</mat-label>
+      <input matInput type="number" placeholder="Fuel" [(ngModel)]="fuelOrder">
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="fuelVisible"></mat-checkbox>
+  </div>
+
+  <div>
+    <mat-form-field appearance="outline" style="width:75px" >
+      <mat-label>Color</mat-label>
+      <input matInput type="number" placeholder="Color" [(ngModel)]="colorOrder">
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="colorVisible"></mat-checkbox>
+  </div>
+
+  <div>
+    <mat-form-field appearance="outline" style="width:75px">
+      <mat-label>Gear</mat-label>
+      <input matInput type="number" placeholder="Gear" [(ngModel)]="gearOrder">
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="gearVisible"></mat-checkbox>
+  </div>
+
+
+  <div>
+    <mat-form-field appearance="outline" style="width:75px">
+      <mat-label>Engine</mat-label>
+      <input matInput type="number" placeholder="Engine" [(ngModel)]="engineOrder">
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="engineVisible"></mat-checkbox>
+  </div>
+</div>

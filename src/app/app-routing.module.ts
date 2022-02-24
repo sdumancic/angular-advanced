@@ -52,6 +52,13 @@ const routes: Routes = [
         (m) => m.TreeDragDropModule
       ),
   },
+  {
+    path: 'css-ordering',
+    loadChildren: () =>
+      import('./css-grid-order/css-grid-order.module').then(
+        (m) => m.CssGridOrderModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,36 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+	grid-gap: 0.5em;
+	align-content: baseline;
+	align-items: flex-start;
+
+  .year-slot{
+    order: 1;
+  }
+  .fuel-slot{
+    order: 2;
+  }
+  .color-slot{
+    order: 3;
+  }
+  .gear-slot {
+    order: 4;
+  }
+  .engine-slot{
+    order: 5;
+  }
+
+  .mat-form-field {
+    width:100%;
+  }
+}
+
+
+.config-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
