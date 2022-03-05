@@ -5,6 +5,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+} from '@angular/router';
 import { IGlobalState } from '../global-state.model';
 import { PoolingService } from '../pooling/pooling.service';
 import { StateService } from '../state.service';
@@ -15,6 +22,7 @@ import { StateService } from '../state.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  loading = false;
   form: FormGroup;
 
   streetValidators = [Validators.required, Validators.minLength(5)];
@@ -24,8 +32,22 @@ export class HomeComponent implements OnInit {
   constructor(
     public poolingService: PoolingService,
     public globalStateService: StateService<IGlobalState>,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    public router: Router
+  ) {
+    this.router.events.subscribe((ev) => {
+      if (ev instanceof NavigationStart) {
+        this.loading = true;
+      }
+      if (
+        ev instanceof NavigationEnd ||
+        ev instanceof NavigationCancel ||
+        ev instanceof NavigationError
+      ) {
+        this.loading = false;
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.globalStateService.setState({

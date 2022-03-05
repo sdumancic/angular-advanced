@@ -1,84 +1,95 @@
-<p>home works!</p>
+<style>
+  .content {
+    display: flex;
+    margin: 82px auto 32px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .card {
+    border: 1px solid #eee;
+    background-color: #fafafa;
+    height: 40px;
+    width: 200px;
+    margin: 0 8px 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  a,
+  a:visited,
+  a:hover {
+    color: #1976d2;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #125699;
+  }
+</style>
 <pre>
   {{globalStateService.snapshot.username}}
 </pre>
 <p>Pooling count times: {{poolingService.pooling$ | async}}</p>
-<table border="1">
-  <tbody>
-    <tr>
-      <td>
-        <a routerLink='/lazy'>/lazy</a>
-      </td>
-      <td>
-        Load lazy module
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a routerLink='/shared-forms'>/shared-forms</a>
-      </td>
-      <td>
-        Shared forms
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a routerLink='/async-validators'>/async-validators</a>
-      </td>
-      <td>
-        Async Validators
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a routerLink='/akita-home'>/akita-home</a>
-      </td>
-      <td>
-        Akita
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a routerLink='/order-entry'>/order-entry</a>
-      </td>
-      <td>
-        Order Entry with Akita
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a routerLink='/material-home'>/material-home</a>
-      </td>
-      <td>
-        Material
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a routerLink='/change-detection-home'>/change-detection-home</a>
-      </td>
-      <td>
-        Change Detection
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a routerLink='/tree-drag-drop'>/tree-drag-drop</a>
-      </td>
-      <td>
-        Tree Drag Drop
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a routerLink='/css-ordering'>/css-ordering</a>
-      </td>
-      <td>
-        CSS Grid order
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+<div *ngIf="loading" id="myModal" class="modal">
+  <div class="lds-roller">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<div class="content" role="main">
+  <div class="card-container">
+    <a class="card" routerLink="/lazy">
+      <span>Lazy</span>
+    </a>
+    <a class="card" routerLink="/shared-forms">
+      <span>Shared Forms</span>
+    </a>
+    <a class="card" routerLink="/async-validators">
+      <span>Async Validators</span>
+    </a>
+    <a class="card" routerLink="/akita-home">
+      <span>Akita</span>
+    </a>
+    <a class="card" routerLink="/order-entry">
+      <span>Order Entry</span>
+    </a>
+    <a class="card" routerLink="/material-home">
+      <span>Material</span>
+    </a>
+    <a class="card" routerLink="/change-detection-home">
+      <span>Change detection</span>
+    </a>
+    <a class="card" routerLink="/tree-drag-drop">
+      <span>Tree Drag Drop</span>
+    </a>
+    <a class="card" routerLink="/css-ordering">
+      <span>Css ordering</span>
+    </a>
+    <a class="card" routerLink="/route-resolver">
+      <span>Route resolver</span>
+    </a>
+  </div>
+</div>
+<router-outlet></router-outlet>
+
+
 
 <br>
 <ng-container [formGroup]="form">

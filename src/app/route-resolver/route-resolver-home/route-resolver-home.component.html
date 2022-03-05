@@ -1,0 +1,13 @@
+<div class="wrapper">
+  <div *ngFor="let product of products" class="card">
+    <img [src]="product.image" />
+    <div>
+      <h3>{{product.title}}</h3>
+      <p class="price">Price = ${{product.price}}</p>
+      <p>{{product.description}}</p>
+    </div>
+    <div class="cart-btn-div">
+      <button type="button">Add to Cart</button>
+    </div>
+  </div>
+</div>

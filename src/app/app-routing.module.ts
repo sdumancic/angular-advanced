@@ -59,6 +59,13 @@ const routes: Routes = [
         (m) => m.CssGridOrderModule
       ),
   },
+  {
+    path: 'route-resolver',
+    loadChildren: () =>
+      import('./route-resolver/route-resolver.module').then(
+        (m) => m.RouteResolverModule
+      ),
+  },
 ];
 
 @NgModule({
