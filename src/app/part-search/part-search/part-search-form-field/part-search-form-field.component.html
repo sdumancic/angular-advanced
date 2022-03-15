@@ -1,0 +1,17 @@
+<ng-container [formGroup]="partSearchForm">
+  <mat-select #franchiseCode class="select" formControlName="franchiseCode"
+    (selectionChange)='_handleInput(partSearchForm.controls.franchiseCode, partNumber)'>
+    <mat-option *ngFor="let franchise of franchiseCodes$|async" [value]='franchise.code'> {{franchise.value }}
+    </mat-option>
+  </mat-select>
+  <mat-divider [vertical]="true" class="divider"></mat-divider>
+  <mat-form-field appearance="outline" class="item">
+    <mat-label>Part number</mat-label>
+    <input #partNumber matInput placeholder="Part number" formControlName="partNumber"
+      (input)='_handleInput(partSearchForm.controls.partNumber, partDescription)'>
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="item">
+    <mat-label>Part description</mat-label>
+    <input #partDescription matInput placeholder="Part description" formControlName="partDescription">
+  </mat-form-field>
+</ng-container>

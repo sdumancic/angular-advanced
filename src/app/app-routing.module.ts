@@ -66,6 +66,13 @@ const routes: Routes = [
         (m) => m.RouteResolverModule
       ),
   },
+  {
+    path: 'part-search',
+    loadChildren: () =>
+      import('./part-search/part-search.module').then(
+        (m) => m.PartSearchModule
+      ),
+  },
 ];
 
 @NgModule({

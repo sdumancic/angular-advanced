@@ -62,5 +62,9 @@ export class HomeComponent implements OnInit {
       fourth: new FormControl(''),
       address: new FormControl(''),
     });
+
+    this.form
+      .get('first')
+      .valueChanges.subscribe((val) => console.log('value changes ', val));
   }
 }
