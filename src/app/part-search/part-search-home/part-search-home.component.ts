@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import {take} from "rxjs/operators";
 
 @Component({
   selector: 'app-part-search-home',
@@ -13,13 +14,15 @@ import {
 })
 export class PartSearchHomeComponent implements OnInit {
   form: FormGroup;
+  partRequired: boolean = true;
   constructor(private fb: FormBuilder) {
     this.form = fb.group({
-      name: ['', { validators: [Validators.required], updateOn: 'blur' }],
-      partOne: new FormControl('', Validators.required),
-      partTwo: new FormControl('', Validators.required),
-      description: ['', { updateOn: 'blur' }],
+      name: [null, { validators: [Validators.required], updateOn: 'blur' }],
+      partOne: new FormControl(null, Validators.required),
+      partTwo: new FormControl(null, Validators.required),
+      description: [null, { updateOn: 'blur' }],
     });
+
   }
 
   ngOnInit(): void {
@@ -29,5 +32,40 @@ export class PartSearchHomeComponent implements OnInit {
         JSON.stringify(this.form.value)
       );
     });
+
+
+/*
+    setTimeout(() => {
+      console.log('setting part to optional')
+      //this.form.get('partOne').clearValidators();
+      this.partRequired = false;
+
+      this.form.patchValue({
+        name: 'test name2',
+        partOne: {
+          franchiseCode: '91',
+          partNumber: '1234-567',
+          partDescription: 'Test'
+        },
+      }, {emitEvent: false})
+
+    },5000)
+  */
+  }
+
+  clearValidator() {
+    this.form.get('partOne').clearValidators();
+  }
+
+  patchValue() {
+    this.form.patchValue({
+      name: 'test name2',
+      partOne: {
+        franchiseCode: '91',
+        partNumber: '1234-567',
+        partDescription: 'Test'
+      },
+    }, {emitEvent: false})
+
   }
 }

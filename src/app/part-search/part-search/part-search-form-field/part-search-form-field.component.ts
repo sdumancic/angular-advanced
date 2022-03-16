@@ -1,8 +1,10 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
+  HostBinding,
   Inject,
   Input,
   OnDestroy,
@@ -17,23 +19,20 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormGroupDirective,
   NgControl,
-  NgForm,
+  ValidationErrors,
+  Validator,
   Validators,
 } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-import {
-  MatFormField,
-  MatFormFieldControl,
-  MAT_FORM_FIELD,
-} from '@angular/material/form-field';
-import { Observable, Subject } from 'rxjs';
+import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl,} from '@angular/material/form-field';
+import {Observable, of, Subject} from 'rxjs';
+import {distinctUntilChanged, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {PartSearchService} from "./part-search.service";
 
 export interface IPartSearchFormFieldValue {
   franchiseCode: string;
   partNumber: string;
-  partDescription: string;
+  partDescription?: string;
 }
 
 /*
@@ -43,6 +42,7 @@ https://material.angular.io/guide/creating-a-custom-form-field-control
   selector: 'app-part-search-form-field',
   templateUrl: './part-search-form-field.component.html',
   styleUrls: ['./part-search-form-field.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default,
   providers: [
     {
       provide: MatFormFieldControl,
@@ -59,7 +59,7 @@ export class PartSearchFormFieldComponent
     OnInit,
     OnDestroy,
     MatFormFieldControl<IPartSearchFormFieldValue>,
-    ControlValueAccessor
+    ControlValueAccessor, Validator
 {
   static nextId = 0;
   @ViewChild('franchiseCode') franchiseCodeSelect: HTMLSelectElement;
@@ -67,6 +67,7 @@ export class PartSearchFormFieldComponent
   @ViewChild('partDescription') partDescriptionInput: HTMLInputElement;
 
   partSearchForm: FormGroup;
+  franchiseCodes$ = of([{code: '91',value:'91'},{code: '92',value:'92'},{code: '95',value:'95'}]);
 
   private unsubscribe$ = new Subject<void>();
 
@@ -75,10 +76,11 @@ export class PartSearchFormFieldComponent
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
     @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
-    @Optional() @Self() public ngControl: NgControl
+    @Optional() @Self() public ngControl: NgControl,
+    private partService: PartSearchService
   ) {
     this.partSearchForm = this.fb.group({
-      franchiseCode: [null, { validators: [Validators.required] }],
+      franchiseCode: [null, {validators: Validators.required}],
       partNumber: [
         null,
         {
@@ -86,11 +88,12 @@ export class PartSearchFormFieldComponent
           updateOn: 'blur',
         },
       ],
-      partDescription: ['', { updateOn: 'blur' }],
+      partDescription: new FormControl({value:null, disabled: true}),
     });
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
+
   }
 
   onChange = (_: any) => {};
@@ -98,8 +101,10 @@ export class PartSearchFormFieldComponent
 
   /* MatFormFieldInterface */
 
+
   @Input()
   get value(): IPartSearchFormFieldValue | null {
+
     if (this.partSearchForm.valid) {
       const {
         value: { franchiseCode, partNumber, partDescription },
@@ -110,21 +115,27 @@ export class PartSearchFormFieldComponent
         partDescription,
       } as IPartSearchFormFieldValue;
     }
-    return null;
+    return {
+      franchiseCode : '91',
+      partNumber: null,
+      partDescription: null,
+    } as IPartSearchFormFieldValue;
   }
   set value(part: IPartSearchFormFieldValue | null) {
+
     const { franchiseCode, partNumber, partDescription } =
       part ||
       ({
-        franchiseCode: '',
-        partNumber: '',
-        partDescription: '',
+        franchiseCode: '91',
+        partNumber: null,
+        partDescription: null,
       } as IPartSearchFormFieldValue);
-    this.partSearchForm.setValue({
+    this.partSearchForm.patchValue({
       franchiseCode,
       partNumber,
       partDescription,
-    });
+    }, {emitEvent: false});
+
     this.stateChanges.next();
   }
 
@@ -152,6 +163,7 @@ export class PartSearchFormFieldComponent
     return !franchiseCode && !partNumber && !partDescription;
   }
 
+  @HostBinding('class.floating')
   get shouldLabelFloat() {
     return this.focused || !this.empty;
   }
@@ -242,7 +254,24 @@ export class PartSearchFormFieldComponent
     this.value = val;
   }
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    //this.onChange = fn;
+
+    // TODO: Should CVA emit values if form is invalid, currently it does
+    this.partSearchForm.valueChanges
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        distinctUntilChanged(),
+        switchMap((formValue) => {
+          return this.validSearch({
+            franchiseCode: formValue.franchiseCode,
+            partNumber:  formValue.partNumber
+          })
+            ? this.searchPart$(formValue.franchiseCode,formValue.partNumber )
+            : of(this.partSearchForm.getRawValue());
+        })
+      )
+      .subscribe(fn);
+
   }
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
@@ -252,11 +281,68 @@ export class PartSearchFormFieldComponent
   }
   /* ControlValueAccessor */
 
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+    const validator = this.ngControl.control.validator(
+      {} as AbstractControl
+    );
+    this.ngControl.control.setValidators(this.validate.bind(this));
+    this.partSearchForm.get('franchiseCode').setValue('91', {emitEvent:false});
+
+  }
 
   _handleInput(control: AbstractControl, nextElement?: HTMLInputElement): void {
-    this.autoFocusNext(control, nextElement);
-    this.onChange(this.value);
+    //this.autoFocusNext(control, nextElement);
+    //this.onChange(this.value);
+  }
+
+  validate(ctrl: AbstractControl): ValidationErrors | null {
+    return this.ngControl.errors;
+  }
+
+  private validSearch = (values: IPartSearchFormFieldValue) => {
+    console.log(values);
+
+    const valid = values.franchiseCode !== null && values.partNumber !==null;
+    console.log('valid search= ', valid);
+    return values.franchiseCode !== null && values.partNumber !==null;
+  };
+
+  private searchPart$(franchiseCode: string, partNumber: string): Observable<IPartSearchFormFieldValue | null> {
+
+    return this.partService
+      .search(
+        franchiseCode,
+        partNumber.toUpperCase()
+      )
+      .pipe(
+        tap((part: IPartSearchFormFieldValue) => {
+          this.afterPartSearch(part);
+        })
+      );
+  }
+
+  private afterPartSearch(part: IPartSearchFormFieldValue): void {
+
+    if (part === null) {
+      this.setPartNotFoundError();
+    } else {
+      this.value = part;
+      this.clearPartNotFoundError();
+    }
+  }
+
+  private setPartNotFoundError(): void {
+    this.partSearchForm.patchValue({partDescription: null}, {emitEvent: false})
+    this.partSearchForm.setErrors({
+      ...this.partSearchForm.errors,
+      partNotFound: true
+    });
+  }
+
+  private clearPartNotFoundError(): void {
+
+    this.partSearchForm.setErrors(null);
   }
 
   ngOnDestroy(): void {
@@ -264,5 +350,13 @@ export class PartSearchFormFieldComponent
     this.stateChanges.complete();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  errors() {
+    return this.partSearchForm.errors;
+  }
+
+  controlErrors() {
+    return this.ngControl.errors;
   }
 }

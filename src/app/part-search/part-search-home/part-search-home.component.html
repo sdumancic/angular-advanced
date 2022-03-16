@@ -11,4 +11,16 @@
       <input matInput placeholder="Description" formControlName="description">
     </mat-form-field>
   </div>
+  <div class="item">
+    <mat-form-field appearance="outline" class="item">
+      <mat-label>Part Search</mat-label>
+      <app-part-search-form-field formControlName="partOne" [required]="partRequired"></app-part-search-form-field>
+    </mat-form-field>
+  </div>
+  {{form.getRawValue()| json}}
+  <div>
+  <button mat-raised-button (click)="patchValue()">Patch form</button>
+  <button mat-raised-button (click)="clearValidator()">Clear validator</button>
+  </div>
 </div>
+

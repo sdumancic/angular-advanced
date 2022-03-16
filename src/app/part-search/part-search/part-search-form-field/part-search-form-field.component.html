@@ -1,17 +1,34 @@
-<ng-container [formGroup]="partSearchForm">
-  <mat-select #franchiseCode class="select" formControlName="franchiseCode"
-    (selectionChange)='_handleInput(partSearchForm.controls.franchiseCode, partNumber)'>
-    <mat-option *ngFor="let franchise of franchiseCodes$|async" [value]='franchise.code'> {{franchise.value }}
-    </mat-option>
-  </mat-select>
-  <mat-divider [vertical]="true" class="divider"></mat-divider>
-  <mat-form-field appearance="outline" class="item">
+<div
+  role="group"
+  class="part-search-container"
+  [formGroup]="partSearchForm"
+  [attr.aria-describedby]="userAriaDescribedBy"
+  [attr.aria-labelledby]="_formField?.getLabelId()"
+  (focusin)="onFocusIn($event)"
+  (focusout)="onFocusOut($event)">
+
+  <mat-form-field appearance="standard" class="item-50-percent">
+    <mat-label>Franchise code</mat-label>
+    <mat-select #franchiseCode class="select" formControlName="franchiseCode"
+      (selectionChange)='_handleInput(partSearchForm.controls.franchiseCode, partNumber)'>
+      <mat-option [value]="null">N/A</mat-option>
+      <mat-option *ngFor="let franchise of franchiseCodes$|async" [value]='franchise.code'> {{franchise.value}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="standard" class="item-50-percent">
     <mat-label>Part number</mat-label>
     <input #partNumber matInput placeholder="Part number" formControlName="partNumber"
       (input)='_handleInput(partSearchForm.controls.partNumber, partDescription)'>
   </mat-form-field>
-  <mat-form-field appearance="outline" class="item">
+  <mat-form-field appearance="standard" class="item">
     <mat-label>Part description</mat-label>
     <input #partDescription matInput placeholder="Part description" formControlName="partDescription">
   </mat-form-field>
-</ng-container>
+  {{partSearchForm.getRawValue()| json}}
+</div>
+
+    {{ errors()|json}}
+<hr>
+{{ controlErrors()|json}}
+

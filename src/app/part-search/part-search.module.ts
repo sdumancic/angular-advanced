@@ -6,10 +6,13 @@ import { MaterialModule } from '../shared/modules/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PartSearchContainerComponent } from './part-search/part-search-container/part-search-container.component';
 import { PartSearchFormFieldComponent } from './part-search/part-search-form-field/part-search-form-field.component';
+import {CommonModule} from "@angular/common";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [PartSearchHomeComponent, PartSearchContainerComponent, PartSearchFormFieldComponent],
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     PartSearchRoutingModule,
     SharedFormsModule,

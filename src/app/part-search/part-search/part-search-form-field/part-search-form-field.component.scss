@@ -1,0 +1,20 @@
+span {
+  opacity: 0;
+  transition: opacity 200ms;
+}
+:host.floating span {
+  opacity: 1;
+}
+
+.part-search-container{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .item-50-percent {
+    width:50%;
+  }
+  .item {
+    width:100%;
+  }
+}
