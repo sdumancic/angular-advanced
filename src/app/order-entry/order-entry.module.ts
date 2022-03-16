@@ -28,35 +28,34 @@ import { AkitaNgEffectsModule } from '@datorama/akita-ng-effects';
 import { OrderItemEffects } from './order-items/state/order-items.effects';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    OrderEntryRoutingModule,
-    HttpClientModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    ContentLoaderModule,
-  ],
-  declarations: [
-    HomeComponent,
-    ToolbarComponent,
-    OrderDetailComponent,
-    OrderItemsOverviewComponent,
-    OrderItemsSearchResultsComponent,
-    CreateItemDialogComponent,
-    EditItemDialogComponent,
-    OrderItemDetailComponent,
-  ],
-  providers: [
-    HomeFacadeService,
-    OrderDetailFacadeService,
-    OrderItemsOverviewFacadeService,
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-  ],
-  entryComponents: [CreateItemDialogComponent],
+    imports: [
+        CommonModule,
+        OrderEntryRoutingModule,
+        HttpClientModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        ContentLoaderModule,
+    ],
+    declarations: [
+        HomeComponent,
+        ToolbarComponent,
+        OrderDetailComponent,
+        OrderItemsOverviewComponent,
+        OrderItemsSearchResultsComponent,
+        CreateItemDialogComponent,
+        EditItemDialogComponent,
+        OrderItemDetailComponent,
+    ],
+    providers: [
+        HomeFacadeService,
+        OrderDetailFacadeService,
+        OrderItemsOverviewFacadeService,
+        { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
+    ]
 })
 export class OrderEntryModule {}
