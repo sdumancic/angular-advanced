@@ -352,11 +352,33 @@ export class PartSearchFormFieldComponent
     this.unsubscribe$.complete();
   }
 
-  errors() {
+  formErrors() {
     return this.partSearchForm.errors;
   }
 
   controlErrors() {
     return this.ngControl.errors;
+  }
+
+
+  get errors(): string[] {
+    const result: string[] = [];
+    if (
+      this.partSearchForm.invalid &&
+      this.partSearchForm.touched
+    ) {
+      if (this.ngControl.errors) {
+        Object.keys(this.ngControl.errors).forEach(keyError => {
+          result.push(keyError);
+        });
+      }
+      if (this.partSearchForm.errors) {
+        Object.keys(this.partSearchForm.errors).forEach(keyError => {
+          result.push(keyError);
+        });
+      }
+    }
+    console.log(result)
+    return result;
   }
 }

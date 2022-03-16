@@ -25,10 +25,14 @@
     <mat-label>Part description</mat-label>
     <input #partDescription matInput placeholder="Part description" formControlName="partDescription">
   </mat-form-field>
-  {{partSearchForm.getRawValue()| json}}
 </div>
 
-    {{ errors()|json}}
+    {{ formErrors()|json}}
 <hr>
 {{ controlErrors()|json}}
+<hr>
+<ng-container *ngFor="let error of errors">
+
+    {{ error}}
+</ng-container>
 
