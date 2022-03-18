@@ -66,6 +66,7 @@ export class PartSearchFormFieldComponent
   @ViewChild('partNumber') partNumberInput: HTMLInputElement;
   @ViewChild('partDescription') partDescriptionInput: HTMLInputElement;
 
+  validationErrorsArray: string[] = [];
   partSearchForm: FormGroup;
   franchiseCodes$ = of([{code: '91',value:'91'},{code: '92',value:'92'},{code: '95',value:'95'}]);
 
@@ -84,7 +85,7 @@ export class PartSearchFormFieldComponent
       partNumber: [
         null,
         {
-          validators: [Validators.required, Validators.minLength(3)],
+          validators: [Validators.required],
           updateOn: 'blur',
         },
       ],
@@ -192,7 +193,7 @@ export class PartSearchFormFieldComponent
   private _disabled = false;
 
   get errorState(): boolean {
-    return this.partSearchForm.invalid && this.touched;
+    return this.partSearchForm.invalid && this.touched ;
   }
 
   controlType: string = 'part-search-form-field';
@@ -288,6 +289,16 @@ export class PartSearchFormFieldComponent
     );
     this.ngControl.control.setValidators(this.validate.bind(this));
     this.partSearchForm.get('franchiseCode').setValue('91', {emitEvent:false});
+    if (this.partSearchForm.get('franchiseCode').errors) {
+      Object.keys(this.partSearchForm.get('franchiseCode').errors).forEach(keyError => {
+        this.validationErrorsArray.push('franchiseCode:' + keyError);
+      });
+    }
+    if (this.partSearchForm.get('partNumber').errors) {
+      Object.keys(this.partSearchForm.get('partNumber').errors).forEach(keyError => {
+        this.validationErrorsArray.push('partNumber:' + keyError);
+      });
+    }
 
   }
 
@@ -297,12 +308,28 @@ export class PartSearchFormFieldComponent
   }
 
   validate(ctrl: AbstractControl): ValidationErrors | null {
-    return this.ngControl.errors;
+    console.log('validate ', this.validationErrorsArray)
+
+      this.validationErrorsArray = [];
+      if (this.partSearchForm.get('franchiseCode').hasError('required')) {
+        this.validationErrorsArray.push('franchiseCode: required');
+      }
+      if (this.partSearchForm.get('partNumber').hasError('required')) {
+        this.validationErrorsArray.push('partNumber: required');
+      }
+      if (this.validationErrorsArray.length === 0) {
+        if (this.partSearchForm.errors) {
+          Object.keys(this.partSearchForm.errors).forEach(keyError => {
+            this.validationErrorsArray.push('form: ' + keyError);
+          });
+        }
+      }
+
+    console.log('validate  end', this.validationErrorsArray)
+    return this.validationErrorsArray;
   }
 
   private validSearch = (values: IPartSearchFormFieldValue) => {
-    console.log(values);
-
     const valid = values.franchiseCode !== null && values.partNumber !==null;
     console.log('valid search= ', valid);
     return values.franchiseCode !== null && values.partNumber !==null;
@@ -353,32 +380,31 @@ export class PartSearchFormFieldComponent
   }
 
   formErrors() {
-    return this.partSearchForm.errors;
-  }
-
-  controlErrors() {
-    return this.ngControl.errors;
+    return this.partSearchForm.errors
   }
 
 
+/*
   get errors(): string[] {
-    const result: string[] = [];
+    console.log('xxx')
+    let result: string[];
     if (
       this.partSearchForm.invalid &&
       this.partSearchForm.touched
     ) {
-      if (this.ngControl.errors) {
-        Object.keys(this.ngControl.errors).forEach(keyError => {
-          result.push(keyError);
-        });
-      }
+      result = [];
       if (this.partSearchForm.errors) {
         Object.keys(this.partSearchForm.errors).forEach(keyError => {
-          result.push(keyError);
+          result.push('form ->' + keyError);
         });
       }
+      if (this.partSearchForm.get('franchiseCode').hasError('required')) {
+          result.push('[franchiseCode] -> required');
+      }
+      if (this.partSearchForm.get('partNumber').hasError('required')) {
+          result.push('[partNumber] -> required');
+      }
     }
-    console.log(result)
     return result;
-  }
+  }*/
 }

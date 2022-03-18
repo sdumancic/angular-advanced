@@ -26,13 +26,10 @@
     <input #partDescription matInput placeholder="Part description" formControlName="partDescription">
   </mat-form-field>
 </div>
-
-    {{ formErrors()|json}}
-<hr>
-{{ controlErrors()|json}}
-<hr>
-<ng-container *ngFor="let error of errors">
-
-    {{ error}}
+<ng-container *ngIf="partSearchForm.touched">
+  <div  *ngFor="let error of validationErrorsArray">
+{{ error}}
+  </div>
 </ng-container>
+
 
