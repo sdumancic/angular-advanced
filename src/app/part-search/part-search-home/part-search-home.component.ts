@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
-  FormGroup,
+  FormGroup, Validator,
   Validators,
 } from '@angular/forms';
 import {take} from "rxjs/operators";
@@ -18,7 +18,7 @@ export class PartSearchHomeComponent implements OnInit {
   constructor(private fb: FormBuilder) {
     this.form = fb.group({
       name: [null, { validators: [Validators.required], updateOn: 'blur' }],
-      partOne: new FormControl(null, Validators.required),
+      partOne: [null, { validators: [Validators.required] }],
       partTwo: new FormControl(null, Validators.required),
       description: [null, { updateOn: 'blur' }],
     });
@@ -53,8 +53,12 @@ export class PartSearchHomeComponent implements OnInit {
   */
   }
 
-  clearValidator() {
-    this.form.get('partOne').clearValidators();
+  get partOneControl(){
+    return this.form.get('partOne') as FormControl;
+  }
+
+  togglePartOneRequired() {
+    this.partRequired = !this.partRequired;
   }
 
   patchValue() {

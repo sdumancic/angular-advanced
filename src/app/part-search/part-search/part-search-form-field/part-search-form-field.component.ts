@@ -100,6 +100,7 @@ export class PartSearchFormFieldComponent
   onChange = (_: any) => {};
   onTouched = () => {};
 
+
   /* MatFormFieldInterface */
 
 
@@ -175,6 +176,17 @@ export class PartSearchFormFieldComponent
   }
   set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
+    if (!value) {
+      this.partSearchForm.get('franchiseCode').clearValidators();
+      this.partSearchForm.get('partNumber').clearValidators();
+      this.partSearchForm.get('franchiseCode').updateValueAndValidity();
+      this.partSearchForm.get('partNumber').updateValueAndValidity();
+    } else {
+      this.partSearchForm.get('franchiseCode').setValidators(Validators.required);
+      this.partSearchForm.get('partNumber').setValidators(Validators.required);
+      this.partSearchForm.get('franchiseCode').updateValueAndValidity();
+      this.partSearchForm.get('partNumber').updateValueAndValidity();
+    }
     this.stateChanges.next();
   }
   private _required = false;
@@ -193,7 +205,7 @@ export class PartSearchFormFieldComponent
   private _disabled = false;
 
   get errorState(): boolean {
-    return this.partSearchForm.invalid && this.touched ;
+    return this.partSearchForm.invalid && this.touched && this.required;
   }
 
   controlType: string = 'part-search-form-field';
@@ -209,11 +221,7 @@ export class PartSearchFormFieldComponent
   }
 
   onContainerClick() {
-    if (this.partSearchForm.controls.franchiseCode.valid) {
-      this._focusMonitor.focusVia(this.partNumberInput, 'program');
-    } else {
-      this._focusMonitor.focusVia(this.franchiseCodeSelect, 'program');
-    }
+
   }
   /* MatFormFieldInterface */
 
@@ -284,21 +292,12 @@ export class PartSearchFormFieldComponent
 
 
   ngOnInit(): void {
-    const validator = this.ngControl.control.validator(
-      {} as AbstractControl
-    );
-    this.ngControl.control.setValidators(this.validate.bind(this));
+    const validator = this.ngControl.control.validator;
+
+    this.ngControl.control.setValidators([this.validate.bind(this)]);
+    this.ngControl.control.updateValueAndValidity();
+
     this.partSearchForm.get('franchiseCode').setValue('91', {emitEvent:false});
-    if (this.partSearchForm.get('franchiseCode').errors) {
-      Object.keys(this.partSearchForm.get('franchiseCode').errors).forEach(keyError => {
-        this.validationErrorsArray.push('franchiseCode:' + keyError);
-      });
-    }
-    if (this.partSearchForm.get('partNumber').errors) {
-      Object.keys(this.partSearchForm.get('partNumber').errors).forEach(keyError => {
-        this.validationErrorsArray.push('partNumber:' + keyError);
-      });
-    }
 
   }
 
@@ -308,30 +307,29 @@ export class PartSearchFormFieldComponent
   }
 
   validate(ctrl: AbstractControl): ValidationErrors | null {
-    console.log('validate ', this.validationErrorsArray)
+      this.manualValidation()
+      return this.validationErrorsArray.length > 0 ? this.validationErrorsArray : null;
+  }
 
-      this.validationErrorsArray = [];
-      if (this.partSearchForm.get('franchiseCode').hasError('required')) {
-        this.validationErrorsArray.push('franchiseCode: required');
+  manualValidation() {
+    this.validationErrorsArray = [];
+    if (this.required && this.partSearchForm.get('franchiseCode').hasError('required')) {
+      this.validationErrorsArray.push('franchiseCode: required');
+    }
+    if (this.required && this.partSearchForm.get('partNumber').hasError('required')) {
+      this.validationErrorsArray.push('partNumber: required');
+    }
+    if (this.required && this.validationErrorsArray.length === 0) {
+      if (this.partSearchForm.errors) {
+        Object.keys(this.partSearchForm.errors).forEach(keyError => {
+          this.validationErrorsArray.push('form: ' + keyError);
+        });
       }
-      if (this.partSearchForm.get('partNumber').hasError('required')) {
-        this.validationErrorsArray.push('partNumber: required');
-      }
-      if (this.validationErrorsArray.length === 0) {
-        if (this.partSearchForm.errors) {
-          Object.keys(this.partSearchForm.errors).forEach(keyError => {
-            this.validationErrorsArray.push('form: ' + keyError);
-          });
-        }
-      }
-
-    console.log('validate  end', this.validationErrorsArray)
-    return this.validationErrorsArray;
+    }
   }
 
   private validSearch = (values: IPartSearchFormFieldValue) => {
     const valid = values.franchiseCode !== null && values.partNumber !==null;
-    console.log('valid search= ', valid);
     return values.franchiseCode !== null && values.partNumber !==null;
   };
 
@@ -365,11 +363,14 @@ export class PartSearchFormFieldComponent
       ...this.partSearchForm.errors,
       partNotFound: true
     });
+    //this.validate(this.ngControl.control);
+
+
   }
 
   private clearPartNotFoundError(): void {
-
     this.partSearchForm.setErrors(null);
+    //this.validate(this.ngControl.control);
   }
 
   ngOnDestroy(): void {
@@ -379,32 +380,4 @@ export class PartSearchFormFieldComponent
     this.unsubscribe$.complete();
   }
 
-  formErrors() {
-    return this.partSearchForm.errors
-  }
-
-
-/*
-  get errors(): string[] {
-    console.log('xxx')
-    let result: string[];
-    if (
-      this.partSearchForm.invalid &&
-      this.partSearchForm.touched
-    ) {
-      result = [];
-      if (this.partSearchForm.errors) {
-        Object.keys(this.partSearchForm.errors).forEach(keyError => {
-          result.push('form ->' + keyError);
-        });
-      }
-      if (this.partSearchForm.get('franchiseCode').hasError('required')) {
-          result.push('[franchiseCode] -> required');
-      }
-      if (this.partSearchForm.get('partNumber').hasError('required')) {
-          result.push('[partNumber] -> required');
-      }
-    }
-    return result;
-  }*/
 }
